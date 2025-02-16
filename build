@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export GOPATH="${HOME}/src/ups-agent"
+
+# если на целевой ОС не совпадает glibc, то собираем без зависимостей.
+# результирующий файл, возможно, получится медленнее и большего размера.
+export CGO_ENABLED=0
+
+if   [ "$1" == "fmt" ]; then
+    go fmt $2
+elif [ "$1" == "get" ]; then
+    go get $2
+elif [ "$1" == "init" ]; then
+    go mod init $2
+elif [ "$1" == "test" ]; then
+    go test
+elif [ "$1" == "tidy" ]; then
+    go mod tidy
+elif [ "$1" == "update" ]; then
+    echo "update..."
+    go get -u ./...
+    go mod tidy
+elif [ "$1" == "vet" ]; then
+    echo "vet..."
+    go vet ./...
+else
+    go build
+fi
