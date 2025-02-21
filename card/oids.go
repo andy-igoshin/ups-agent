@@ -47,3 +47,21 @@ const (
 	UpsEnvOverHumidity                 = ".1.3.6.1.4.1.935.1.1.1.9.2.3.0"
 	UpsEnvUnderHumidity                = ".1.3.6.1.4.1.935.1.1.1.9.2.4.0"
 )
+
+const (
+	UpsBaseBatteryStatusUnknown = iota + 1 // Неизвестно (1)
+	UpsBaseBatteryStatusOk                 // АКБ в норме (2)
+	UpsBaseBatteryStatusLow                // Низкий заряд АКБ (3)
+)
+
+const (
+	UpsBaseOutputStatusUnknown     = iota + 1 // Неизвестно (1)
+	UpsBaseOutputStatusOnline                 // Онлайн (2)
+	UpsBaseOutputStatusOnBattery              // Работа от АКБ (3)
+	UpsBaseOutputStatusVoltageRise            // Повышение напряжения (4)
+	UpsBaseOutputStatusSleep                  // Спящий режим (5)
+	UpsBaseOutputStatusBypass                 // Байпас (6)
+	UpsBaseOutputStatusReboot                 // Перезагрузка (7)
+	UpsBaseOutputStatusWait                   // Ожидание (8)
+	UpsBaseOutputStatusVoltageDrop            // Понижение напряжения (9)
+)

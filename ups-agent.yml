@@ -1,6 +1,10 @@
 #upsname: c2r1ups1
 model: СИПБ6КД.9-11/БПС 6000 ВА
 
+logger:
+  logdir: "./"
+  filename: "ups-agent.log"
+
 snmp:
   addr: 172.30.2.20
   community: public

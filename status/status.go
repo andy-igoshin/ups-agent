@@ -9,7 +9,7 @@ import (
 
 func Print(conf *config.Config) {
 
-	st, err := card.GetStatus(conf.Snmp.Addr, conf.Snmp.Community)
+	st, err := card.Status(conf.Snmp.Addr, conf.Snmp.Community)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -20,14 +20,15 @@ func Print(conf *config.Config) {
 	fmt.Printf(form, "Hostname", conf.Hostname)
 	fmt.Printf(form, "UPS Name", getUpsName(st, conf.UpsName))
 	fmt.Printf(form, "Model", getUpsModel(st, conf.Model))
-	fmt.Printf(form, "Status", getStatus(st))
+	fmt.Printf(form, "Status", getOutputStatus(st))
 	fmt.Printf(form, "Line Voltage", getLineVoltage(st))
 	fmt.Printf(form, "Line Frequency", getLineFreq(st))
 	fmt.Printf(form, "Line Fail Cause", getLineFailCause(st))
 	fmt.Printf(form, "Output Voltage", getOutputVoltage(st))
 	fmt.Printf(form, "Output Frequency", getOutputFrequency(st))
 	fmt.Printf(form, "Output Load", getOutputLoad(st))
-	fmt.Printf(form, "Battery Capacity", getCapacity(st))
+	fmt.Printf(form, "Battery Status", getBatteryStatus(st))
+	fmt.Printf(form, "Battery Capacity", getBatteryCapacity(st))
 	fmt.Printf(form, "RunTime Remaining", getRunTimeRemaining(st))
 	fmt.Printf(form, "Min Battery Level", getBatteryLevel(conf.BatteryLevel))
 	fmt.Printf(form, "Min Time Left", conf.Minutes.String())
@@ -45,7 +46,6 @@ func Print(conf *config.Config) {
 	fmt.Printf(form, "Diagnostic Schedule", getDiagnosticSchedule(st))
 	fmt.Printf(form, "Last Diagnostics Date", getLastDiagnosticsDate(st))
 	fmt.Printf(form, "Battery Last Replace", getBatteryLastReplaceDate(st))
-	fmt.Printf(form, "Battery Status", getBatteryStatus(st))
 
 	if bri := getBatteryReplaceIndicator(st); len(bri) > 0 {
 		fmt.Printf(form, "Battery Replace Ind.", bri)

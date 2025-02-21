@@ -3,10 +3,10 @@ package card
 import (
 	"fmt"
 
-	snmp "github.com/gosnmp/gosnmp"
+	g "github.com/gosnmp/gosnmp"
 )
 
-var oidsStatus = []string{
+var status = []string{
 	SysDescr,
 	UpsBaseIdentModel,
 	UpsBaseIdentUpsName,
@@ -47,18 +47,23 @@ var oidsStatus = []string{
 	UpsEnvUnderHumidity,
 }
 
-func GetStatus(addr, community string) (map[string]any, error) {
+func Status(addr, community string) (map[string]any, error) {
 
-	snmp.Default.Community = community
-	snmp.Default.Target = addr
+	snmp := &g.GoSNMP{
+		Target:    addr,
+		Port:      g.Default.Port,
+		Community: community,
+		Version:   g.Default.Version,
+		Timeout:   g.Default.Timeout,
+	}
 
-	err := snmp.Default.Connect()
+	err := snmp.Connect()
 	if err != nil {
 		return nil, fmt.Errorf("snmp connect(): %s", err)
 	}
-	defer snmp.Default.Conn.Close()
+	defer snmp.Conn.Close()
 
-	res, err := snmp.Default.Get(oidsStatus)
+	res, err := snmp.Get(status)
 	if err != nil {
 		return nil, fmt.Errorf("snmp get(): %s", err)
 	}
@@ -67,7 +72,7 @@ func GetStatus(addr, community string) (map[string]any, error) {
 
 	for _, v := range res.Variables {
 		switch v.Type {
-		case snmp.OctetString:
+		case g.OctetString:
 			st[v.Name] = string(v.Value.([]byte))
 		default:
 			st[v.Name] = v.Value.(int)

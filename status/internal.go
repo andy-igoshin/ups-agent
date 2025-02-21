@@ -19,6 +19,13 @@ func getAlarmTimer(st map[string]any) (t string) {
 	return
 }
 
+func getBatteryCapacity(st map[string]any) (l string) {
+	if v, ok := st[card.UpsSmartBatteryCapacity]; ok {
+		l = fmt.Sprintf("%d%%", v)
+	}
+	return
+}
+
 func getBatteryLastReplaceDate(st map[string]any) (l string) {
 	if v, ok := st[card.UpsBaseBatteryLastReplaceDate]; ok {
 		l = v.(string)
@@ -66,13 +73,6 @@ func getBatteryTemperature(st map[string]any) (l string) {
 func getBatteryVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryVoltage]; ok {
 		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
-	}
-	return
-}
-
-func getCapacity(st map[string]any) (l string) {
-	if v, ok := st[card.UpsSmartBatteryCapacity]; ok {
-		l = fmt.Sprintf("%d%%", v)
 	}
 	return
 }
@@ -259,6 +259,32 @@ func getOutputLoad(st map[string]any) (l string) {
 	return
 }
 
+func getOutputStatus(st map[string]any) (s string) {
+	if v, ok := st[card.UpsBaseOutputStatus]; ok {
+		switch v {
+		case 1:
+			s = "Неизвестно (1)"
+		case 2:
+			s = "Онлайн (2)"
+		case 3:
+			s = "Работа от АКБ (3)"
+		case 4:
+			s = "Повышение напряжения (4)"
+		case 5:
+			s = "Спящий режим (5)"
+		case 6:
+			s = "Байпас (6)"
+		case 7:
+			s = "Перезагрузка (7)"
+		case 8:
+			s = "Ожидание (8)"
+		case 9:
+			s = "Понижение напряжения (9)"
+		}
+	}
+	return
+}
+
 func getOutputVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartOutputVoltage]; ok {
 		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
@@ -307,32 +333,6 @@ func getShutoffDelay(st map[string]any) (t string) {
 		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
 		if err == nil {
 			t = d.String()
-		}
-	}
-	return
-}
-
-func getStatus(st map[string]any) (s string) {
-	if v, ok := st[card.UpsBaseOutputStatus]; ok {
-		switch v {
-		case 1:
-			s = "Неизвестно (1)"
-		case 2:
-			s = "Онлайн (2)"
-		case 3:
-			s = "Работа от АКБ (3)"
-		case 4:
-			s = "Повышение напряжения (4)"
-		case 5:
-			s = "Спящий режим (5)"
-		case 6:
-			s = "Байпас (6)"
-		case 7:
-			s = "Перезагрузка (7)"
-		case 8:
-			s = "Ожидание (8)"
-		case 9:
-			s = "Понижение напряжения (9)"
 		}
 	}
 	return
