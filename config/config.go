@@ -10,24 +10,26 @@ import (
 )
 
 type Config struct {
-	Debug    bool
-	Status   bool
-	Hostname string
-	UpsName  string
-	Model    string
-
+	Debug        bool
+	Status       bool
+	Hostname     string
+	UpsName      string
+	Model        string
 	BatteryLevel int           `default:"10"`
 	Minutes      time.Duration `default:"10m"`
+	Timeout      time.Duration
 
 	Logger struct {
 		LogDir   string `default:"/var/log"`
 		FileName string `default:"ups-agent.log"`
+		Level    string `default:"info"`
 	}
 
 	Snmp struct {
-		Addr      string
-		Community string        `default:"public"`
-		PollTime  time.Duration `default:"60s"`
+		Addr         string
+		Community    string        `default:"public"`
+		PollTime     time.Duration `default:"60s"`
+		TrapListener string
 	}
 }
 

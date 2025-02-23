@@ -14,7 +14,6 @@ type MonitorData struct {
 	UpsSmartBatteryRunTimeRemaining time.Duration
 	UpsSmartInputLineFailCause      int
 	UpsBaseOutputStatus             int
-	UpsSmartConfigAlarmTimer        time.Duration
 }
 
 var monitor = []string{
@@ -24,7 +23,6 @@ var monitor = []string{
 	UpsSmartBatteryRunTimeRemaining,
 	UpsSmartInputLineFailCause,
 	UpsBaseOutputStatus,
-	UpsSmartConfigAlarmTimer,
 }
 
 func Monitor(addr, community string) (*MonitorData, error) {
@@ -70,10 +68,6 @@ func Monitor(addr, community string) (*MonitorData, error) {
 
 		case UpsBaseOutputStatus:
 			md.UpsBaseOutputStatus = v.Value.(int)
-
-		case UpsSmartConfigAlarmTimer:
-			md.UpsSmartConfigAlarmTimer = time.Duration(v.Value.(int)) * time.Second
-
 		}
 	}
 

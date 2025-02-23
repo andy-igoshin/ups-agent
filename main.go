@@ -1,7 +1,10 @@
 package main
 
 import (
+	"sync"
+
 	"git.vsu.ru/ai/ups-agent/config"
+	"git.vsu.ru/ai/ups-agent/log"
 	"git.vsu.ru/ai/ups-agent/monitor"
 	"git.vsu.ru/ai/ups-agent/status"
 )
@@ -15,16 +18,19 @@ func main() {
 		return
 	}
 
-	logger := logNew(conf)
-	defer logClose()
+	logger := log.New(conf)
+	defer logger.Close()
 
-	trapc := make(chan string, 5)
+	trapc := make(chan string)
+	var wg sync.WaitGroup
 
-	go monitor.Run(conf, logger, trapc)
+	go monitor.Run(conf, logger, trapc, &wg)
 
-	logger.Print("UPS Agent is started")
+	logger.Info("UPS Agent is started")
 
-	waitSignals(conf, logger)
+	waitSignals(logger)
 
-	logger.Print("UPS Agent is stopped")
+	wg.Wait()
+
+	logger.Info("UPS Agent is stopped")
 }
