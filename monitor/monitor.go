@@ -17,7 +17,7 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 
 		select {
 		case trap := <-trapc:
-			if card.NeedShutdown(trap) {
+			if card.NeedPoweroff(trap) {
 				// shutdown
 			}
 

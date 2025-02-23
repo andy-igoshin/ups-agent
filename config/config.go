@@ -20,7 +20,7 @@ type Config struct {
 	Timeout      time.Duration
 
 	Logger struct {
-		LogDir   string `default:"/var/log"`
+		LogDir   string `default:"/var/log/ups-agent"`
 		FileName string `default:"ups-agent.log"`
 		Level    string `default:"info"`
 	}
