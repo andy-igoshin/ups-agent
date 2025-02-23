@@ -26,10 +26,11 @@ type Config struct {
 	}
 
 	Snmp struct {
-		Addr         string
-		Community    string        `default:"public"`
-		PollTime     time.Duration `default:"60s"`
-		TrapListener string
+		Addr          string
+		Community     string        `default:"public"`
+		PollTime      time.Duration `default:"60s"`
+		TrapCommunity string        `default:"public"`
+		TrapListener  string
 	}
 }
 

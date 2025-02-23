@@ -9,12 +9,14 @@ import (
 	"git.vsu.ru/ai/ups-agent/log"
 )
 
-func TrapReceiver(listenAddr string, srcAddr string, logger *log.Logger, trapc chan string, wg *sync.WaitGroup) {
+func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logger *log.Logger,
+	trapc chan string, wg *sync.WaitGroup) {
 
 	trapAcl := net.ParseIP(srcAddr)
 
 	tl := g.NewTrapListener()
 	tl.Params = g.Default
+	tl.Params.Community = trapCommunity
 	tl.OnNewTrap = func(packet *g.SnmpPacket, addr *net.UDPAddr) {
 		trapHandler(packet, addr, trapAcl, logger, trapc, wg)
 	}

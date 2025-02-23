@@ -11,7 +11,7 @@ import (
 
 func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.WaitGroup) {
 
-	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, logger, trapc, wg)
+	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc, wg)
 
 	for {
 
