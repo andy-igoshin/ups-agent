@@ -19,6 +19,8 @@ type Config struct {
 	Minutes      time.Duration `default:"10m"`
 	Timeout      time.Duration
 
+	PoweroffCmd string `default:"/sbin/reboot"`
+
 	Logger struct {
 		LogDir   string `default:"/var/log/ups-agent"`
 		FileName string `default:"ups-agent.log"`

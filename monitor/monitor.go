@@ -7,20 +7,21 @@ import (
 	"git.vsu.ru/ai/ups-agent/card"
 	"git.vsu.ru/ai/ups-agent/config"
 	"git.vsu.ru/ai/ups-agent/log"
+	"git.vsu.ru/ai/ups-agent/poweroff"
 )
 
 func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.WaitGroup) {
 
 	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc, wg)
 
-	for {
+	p := poweroff.New(conf, logger)
 
+	for {
 		select {
 		case trap := <-trapc:
 			if card.NeedPoweroff(trap) {
-				// shutdown
+				p.Poweroff()
 			}
-
 		case <-time.After(conf.Snmp.PollTime):
 			// next polling
 		}
@@ -58,25 +59,25 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 		if md.UpsBaseBatteryStatus == card.UpsBaseBatteryStatusLow {
 			logger.Emerg("Initiated system shutdown process, low battery level, BatteryCapacity(%d%%)",
 				md.UpsSmartBatteryCapacity)
-			// Shutdown
+			p.Poweroff()
 		}
 
 		if md.UpsSmartBatteryCapacity < conf.BatteryLevel {
 			logger.Emerg("Initiated system shutdown process, BatteryCapacity(%d%%) < BatteryLevel(%d%%)",
 				md.UpsSmartBatteryCapacity, conf.BatteryLevel)
-			// Shutdown
+			p.Poweroff()
 		}
 
 		if md.UpsSmartBatteryRunTimeRemaining < conf.Minutes {
 			logger.Emerg("Initiated system shutdown process, RunTimeRemaining(%s) < Minutes(%s)",
 				md.UpsSmartBatteryRunTimeRemaining, conf.Minutes)
-			// Shutdown
+			p.Poweroff()
 		}
 
 		if conf.Timeout > 0 && md.UpsBaseBatteryTimeOnBattery > conf.Timeout {
 			logger.Emerg("Initiated system shutdown process, TimeOnBattery(%s) > Timeout(%s)",
 				md.UpsBaseBatteryTimeOnBattery, conf.Timeout)
-			// Shutdown
+			p.Poweroff()
 		}
 	}
 }
