@@ -1,0 +1,19 @@
+[Unit]
+Description=UPS Agent
+ConditionPathExists=/opt/ups-agent/ups-agent
+After=network-online.target
+ 
+[Service]
+Type=exec
+User=ups-agent
+Group=ups-agent
+
+Restart=always
+RestartSec=5s
+
+WorkingDirectory=/opt/ups-agent
+ExecStart=/opt/ups-agent/ups-agent
+AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_SETUID
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -20,7 +21,7 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 		select {
 		case trap := <-trapc:
 			if card.NeedPoweroff(trap) {
-				p.Poweroff()
+				p.Poweroff(fmt.Sprintf("Initiated system shutdown process, trap %s", trap))
 			}
 		case <-time.After(conf.Snmp.PollTime):
 			// next polling
@@ -57,27 +58,23 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 		}
 
 		if md.UpsBaseBatteryStatus == card.UpsBaseBatteryStatusLow {
-			logger.Emerg("Initiated system shutdown process, low battery level, BatteryCapacity(%d%%)",
-				md.UpsSmartBatteryCapacity)
-			p.Poweroff()
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, low battery level, BatteryCapacity(%d%%)",
+				md.UpsSmartBatteryCapacity))
 		}
 
-		if md.UpsSmartBatteryCapacity < conf.BatteryLevel {
-			logger.Emerg("Initiated system shutdown process, BatteryCapacity(%d%%) < BatteryLevel(%d%%)",
-				md.UpsSmartBatteryCapacity, conf.BatteryLevel)
-			p.Poweroff()
+		if md.UpsSmartBatteryCapacity < conf.PowerCtl.BatteryLevel {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, BatteryCapacity(%d%%) < BatteryLevel(%d%%)",
+				md.UpsSmartBatteryCapacity, conf.PowerCtl.BatteryLevel))
 		}
 
-		if md.UpsSmartBatteryRunTimeRemaining < conf.Minutes {
-			logger.Emerg("Initiated system shutdown process, RunTimeRemaining(%s) < Minutes(%s)",
-				md.UpsSmartBatteryRunTimeRemaining, conf.Minutes)
-			p.Poweroff()
+		if md.UpsSmartBatteryRunTimeRemaining < conf.PowerCtl.Minutes {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, RunTimeRemaining(%s) < Minutes(%s)",
+				md.UpsSmartBatteryRunTimeRemaining, conf.PowerCtl.Minutes))
 		}
 
-		if conf.Timeout > 0 && md.UpsBaseBatteryTimeOnBattery > conf.Timeout {
-			logger.Emerg("Initiated system shutdown process, TimeOnBattery(%s) > Timeout(%s)",
-				md.UpsBaseBatteryTimeOnBattery, conf.Timeout)
-			p.Poweroff()
+		if conf.PowerCtl.Timeout > 0 && md.UpsBaseBatteryTimeOnBattery > conf.PowerCtl.Timeout {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, TimeOnBattery(%s) > Timeout(%s)",
+				md.UpsBaseBatteryTimeOnBattery, conf.PowerCtl.Timeout))
 		}
 	}
 }

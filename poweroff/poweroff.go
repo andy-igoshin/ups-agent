@@ -4,6 +4,7 @@ package poweroff
 
 import (
 	"os/exec"
+	"sync"
 	"syscall"
 
 	"git.vsu.ru/ai/ups-agent/config"
@@ -11,18 +12,31 @@ import (
 )
 
 type PowerOff struct {
-	cmd *exec.Cmd
-	log *log.Logger
+	cmd  *exec.Cmd
+	log  *log.Logger
+	run  bool
+	once sync.Once
 }
 
 func New(conf *config.Config, logger *log.Logger) *PowerOff {
 	p := PowerOff{}
-	p.cmd = exec.Command(conf.PoweroffCmd)
+	p.cmd = exec.Command(conf.PowerCtl.PoweroffCmd)
 	p.log = logger
+	p.run = conf.PowerCtl.Poweroff
 	return &p
 }
 
-func (p *PowerOff) Poweroff() {
+func (p *PowerOff) Poweroff(msg string) {
+	p.once.Do(func() {
+		if p.run {
+			p.poweroff(msg)
+		}
+	})
+}
+
+func (p *PowerOff) poweroff(msg string) {
+
+	p.log.Emerg(msg)
 
 	syscall.Sync()
 	syscall.Sync()

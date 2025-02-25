@@ -13,7 +13,7 @@ func main() {
 
 	conf := config.New()
 
-	if conf.Status {
+	if conf.StatusCli {
 		status.Print(conf)
 		return
 	}

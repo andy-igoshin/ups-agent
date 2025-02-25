@@ -339,11 +339,10 @@ func getShutoffDelay(st map[string]any) (t string) {
 }
 
 func getUpsModel(st map[string]any, model string) (m string) {
-	if v, ok := st[card.UpsBaseIdentModel]; ok {
+	if len(model) > 0 {
+		m = model
+	} else if v, ok := st[card.UpsBaseIdentModel]; ok {
 		m = strings.TrimSpace(v.(string))
-		if len(m) == 0 {
-			m = model
-		}
 	}
 	return
 }
