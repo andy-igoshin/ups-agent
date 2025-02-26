@@ -18,17 +18,17 @@ type Config struct {
 	StatusCli bool
 
 	Logger struct {
-		LogDir   string `default:"/var/log/ups-agent"`
+		LogDir   string `default:"logs"`
 		FileName string `default:"ups-agent.log"`
 		Level    string `default:"info"`
 	}
 
 	PowerCtl struct {
-		Poweroff     bool
+		Poweroff     bool          `default:"true"`
 		PoweroffCmd  string        `default:"/sbin/poweroff"`
 		BatteryLevel int           `default:"10"`
 		Minutes      time.Duration `default:"10m"`
-		Timeout      time.Duration
+		Timeout      time.Duration `default:"0s"`
 	}
 
 	Snmp struct {
@@ -37,6 +37,20 @@ type Config struct {
 		PollTime      time.Duration `default:"60s"`
 		TrapCommunity string        `default:"public"`
 		TrapListener  string
+	}
+
+	UpsConfig struct {
+		RatedOutputVoltage int
+		HighTransferVolt   int
+		LowTransferVolt    int
+		Alarm              int
+		AlarmTimer         time.Duration `default:"-1s"`
+		MinReturnCapacity  int           `default:"-1"`
+		Sensitivity        int
+		LowBatteryRunTime  time.Duration
+		ReturnDelay        time.Duration `default:"-1s"`
+		ShutoffDelay       time.Duration
+		UpsSleepTime       time.Duration `default:"-1s"`
 	}
 }
 

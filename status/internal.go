@@ -348,14 +348,13 @@ func getUpsModel(st map[string]any, model string) (m string) {
 }
 
 func getUpsName(st map[string]any, upsname string) (n string) {
-	if v, ok := st[card.UpsBaseIdentUpsName]; ok {
+	if len(upsname) > 0 {
+		n = upsname
+	} else if v, ok := st[card.UpsBaseIdentUpsName]; ok {
 		n = strings.TrimSpace(v.(string))
 		if len(n) == 0 {
 			if v, ok := st[card.SysDescr]; ok {
 				n = strings.TrimSpace(v.(string))
-				if len(n) == 0 {
-					n = upsname
-				}
 			}
 		}
 	}
