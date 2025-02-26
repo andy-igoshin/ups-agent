@@ -2,7 +2,7 @@
 Description=UPS Agent
 ConditionPathExists=/opt/ups-agent/ups-agent
 After=network-online.target
- 
+
 [Service]
 Type=exec
 User=ups-agent
