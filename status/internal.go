@@ -245,6 +245,13 @@ func getMinReturnCapacity(st map[string]any) (l string) {
 	return
 }
 
+func getOutputCurrentAmp(st map[string]any) (a float64) {
+	if v, ok := st[card.UpsOutputCurrent]; ok {
+		a = float64(v.(int)) / 10
+	}
+	return
+}
+
 func getOutputFrequency(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartOutputFrequency]; ok {
 		l = fmt.Sprintf("%.1f Гц", float64(v.(int))/10)
@@ -254,7 +261,8 @@ func getOutputFrequency(st map[string]any) (l string) {
 
 func getOutputLoad(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartOutputLoad]; ok {
-		l = fmt.Sprintf("%d%%", v)
+		amp := getOutputCurrentAmp(st)
+		l = fmt.Sprintf("%d%% (%.1f А, %.1f ВА)", v, amp, getOutputVoltageVolt(st)*amp)
 	}
 	return
 }
@@ -285,9 +293,13 @@ func getOutputStatus(st map[string]any) (s string) {
 	return
 }
 
-func getOutputVoltage(st map[string]any) (l string) {
+func getOutputVoltage(st map[string]any) string {
+	return fmt.Sprintf("%.1f Вольт", getOutputVoltageVolt(st))
+}
+
+func getOutputVoltageVolt(st map[string]any) (vo float64) {
 	if v, ok := st[card.UpsSmartOutputVoltage]; ok {
-		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
+		vo = float64(v.(int)) / 10
 	}
 	return
 }

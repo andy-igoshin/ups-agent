@@ -8,6 +8,7 @@ import (
 
 var status = []string{
 	SysDescr,
+	UpsOutputCurrent,
 	UpsBaseIdentModel,
 	UpsBaseIdentUpsName,
 	UpsSmartIdentFirmwareRevision,

@@ -1,2 +1,2 @@
-sudo setcap cap_setuid=eip ./ups-agent
-CAP_SETUID
+чтобы не демон не прибивался systemd периодически
+loginctl enable-linger ups-agent

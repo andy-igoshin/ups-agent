@@ -2,6 +2,7 @@ package card
 
 const (
 	SysDescr                           = ".1.3.6.1.2.1.1.1.0"
+	UpsOutputCurrent                   = ".1.3.6.1.2.1.33.1.4.4.1.3.1" // 0.1 RMS Amp
 	UpsBaseIdentModel                  = ".1.3.6.1.4.1.935.1.1.1.1.1.1.0"
 	UpsBaseIdentUpsName                = ".1.3.6.1.4.1.935.1.1.1.1.1.2.0"
 	UpsSmartIdentFirmwareRevision      = ".1.3.6.1.4.1.935.1.1.1.1.2.1.0"
