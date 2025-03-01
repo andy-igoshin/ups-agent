@@ -9,16 +9,6 @@ import (
 	"git.vsu.ru/ai/ups-agent/card"
 )
 
-func getAlarmTimer(st map[string]any) (t string) {
-	if v, ok := st[card.UpsSmartConfigAlarmTimer]; ok {
-		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
-		if err == nil {
-			t = d.String()
-		}
-	}
-	return
-}
-
 func getBatteryCapacity(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryCapacity]; ok {
 		l = fmt.Sprintf("%d%%", v)
@@ -65,14 +55,14 @@ func getBatteryStatus(st map[string]any) (s string) {
 
 func getBatteryTemperature(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryTemperature]; ok {
-		l = fmt.Sprintf("%.1f C", float64(v.(int))/10)
+		l = fmt.Sprintf("%.1f ℃ ", float64(v.(int))/10)
 	}
 	return
 }
 
 func getBatteryVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryVoltage]; ok {
-		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
+		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
 	}
 	return
 }
@@ -139,7 +129,7 @@ func getEnvTemperature(st map[string]any) (s string) {
 			if v, ok := st[card.UpsEnvUnderTemperature]; ok {
 				tu = float64(v.(int)) / 10
 			}
-			s = fmt.Sprintf("%.1f C (%.1f/%.1f)", t, tu, to)
+			s = fmt.Sprintf("%.1f ℃  (%.1f/%.1f ℃ )", t, tu, to)
 		}
 	}
 	return
@@ -211,7 +201,7 @@ func getLineVoltage(st map[string]any) string {
 	if v, ok := st[card.UpsSmartInputMinLineVoltage]; ok {
 		vmin = float64(v.(int)) / 10
 	}
-	return fmt.Sprintf("%.1f Вольт (%.1f/%.1f)", vcur, vmin, vmax)
+	return fmt.Sprintf("%.1f В (%.1f/%.1f В)", vcur, vmin, vmax)
 }
 
 func getLowBatteryRunTime(st map[string]any) (t string) {
@@ -224,18 +214,16 @@ func getLowBatteryRunTime(st map[string]any) (t string) {
 	return
 }
 
-func getHighTransferVolt(st map[string]any) (l string) {
-	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
-		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
-	}
-	return
-}
-
-func getLowTransferVolt(st map[string]any) (l string) {
+func getTransferVoltage(st map[string]any) string {
+	var l float64
+	var h float64
 	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
-		l = fmt.Sprintf("%.1f Вольт", float64(v.(int))/10)
+		l = float64(v.(int)) / 10
 	}
-	return
+	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
+		h = float64(v.(int)) / 10
+	}
+	return fmt.Sprintf("%.1f/%.1f В", l, h)
 }
 
 func getMinReturnCapacity(st map[string]any) (l string) {
@@ -245,7 +233,7 @@ func getMinReturnCapacity(st map[string]any) (l string) {
 	return
 }
 
-func getOutputCurrentAmp(st map[string]any) (a float64) {
+func getOutputCurrent(st map[string]any) (a float64) {
 	if v, ok := st[card.UpsOutputCurrent]; ok {
 		a = float64(v.(int)) / 10
 	}
@@ -261,7 +249,7 @@ func getOutputFrequency(st map[string]any) (l string) {
 
 func getOutputLoad(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartOutputLoad]; ok {
-		amp := getOutputCurrentAmp(st)
+		amp := getOutputCurrent(st)
 		l = fmt.Sprintf("%d%% (%.1f А, %.1f ВА)", v, amp, getOutputVoltageVolt(st)*amp)
 	}
 	return
@@ -294,7 +282,7 @@ func getOutputStatus(st map[string]any) (s string) {
 }
 
 func getOutputVoltage(st map[string]any) string {
-	return fmt.Sprintf("%.1f Вольт", getOutputVoltageVolt(st))
+	return fmt.Sprintf("%.1f В", getOutputVoltageVolt(st))
 }
 
 func getOutputVoltageVolt(st map[string]any) (vo float64) {

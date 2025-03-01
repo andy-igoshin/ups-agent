@@ -31,7 +31,6 @@ var status = []string{
 	UpsSmartOutputLoad,
 	UpsSmartConfigHighTransferVolt,
 	UpsSmartConfigLowTransferVolt,
-	UpsSmartConfigAlarmTimer,
 	UpsSmartConfigMinReturnCapacity,
 	UpsSmartConfigSensitivity,
 	UpsSmartConfigLowBatteryRunTime,
