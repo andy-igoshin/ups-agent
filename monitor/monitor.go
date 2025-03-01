@@ -35,7 +35,7 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 
 		switch md.UpsBaseOutputStatus {
 		case card.UpsBaseOutputStatusOnline:
-			logger.Debug("UPS output run Online")
+			logger.Debug("UPS output run Online, BatteryCapacity(%d%%)", md.UpsSmartBatteryCapacity)
 			continue
 
 		case card.UpsBaseOutputStatusOnBattery:
