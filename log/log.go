@@ -74,7 +74,14 @@ func (l *Logger) Debug(format string, v ...any) {
 	}
 }
 
-func (l *Logger) Emerg(format string, v ...any) {
+func (l *Logger) Emerg(v ...any) {
+	if l.level >= syslog.LOG_EMERG {
+		l.logger.SetPrefix("[emerg] ")
+		l.logger.Print(v...)
+	}
+}
+
+func (l *Logger) Emergf(format string, v ...any) {
 	if l.level >= syslog.LOG_EMERG {
 		l.logger.SetPrefix("[emerg] ")
 		l.logger.Printf(format, v...)
