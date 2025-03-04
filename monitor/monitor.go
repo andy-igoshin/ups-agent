@@ -62,18 +62,18 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 				md.UpsSmartBatteryCapacity))
 		}
 
-		if md.UpsSmartBatteryCapacity < conf.PowerCtl.BatteryLevel {
-			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, BatteryCapacity(%d%%) < BatteryLevel(%d%%)",
+		if md.UpsSmartBatteryCapacity <= conf.PowerCtl.BatteryLevel {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, BatteryCapacity(%d%%) <= BatteryLevel(%d%%)",
 				md.UpsSmartBatteryCapacity, conf.PowerCtl.BatteryLevel))
 		}
 
-		if md.UpsSmartBatteryRunTimeRemaining < conf.PowerCtl.Minutes {
-			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, RunTimeRemaining(%s) < Minutes(%s)",
+		if md.UpsSmartBatteryRunTimeRemaining <= conf.PowerCtl.Minutes {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, RunTimeRemaining(%s) <= Minutes(%s)",
 				md.UpsSmartBatteryRunTimeRemaining, conf.PowerCtl.Minutes))
 		}
 
-		if conf.PowerCtl.Timeout > 0 && md.UpsBaseBatteryTimeOnBattery > conf.PowerCtl.Timeout {
-			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, TimeOnBattery(%s) > Timeout(%s)",
+		if conf.PowerCtl.Timeout > 0 && md.UpsBaseBatteryTimeOnBattery >= conf.PowerCtl.Timeout {
+			p.Poweroff(fmt.Sprintf("Initiated system shutdown process, TimeOnBattery(%s) >= Timeout(%s)",
 				md.UpsBaseBatteryTimeOnBattery, conf.PowerCtl.Timeout))
 		}
 	}
