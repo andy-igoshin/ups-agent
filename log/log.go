@@ -55,73 +55,62 @@ func (l *Logger) Reopen() {
 
 func (l *Logger) Alert(format string, v ...any) {
 	if l.level >= syslog.LOG_ALERT {
-		l.logger.SetPrefix("[alert] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[alert] "+format, v...)
 	}
 }
 
 func (l *Logger) Crit(format string, v ...any) {
 	if l.level >= syslog.LOG_CRIT {
-		l.logger.SetPrefix("[crit] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[crit] "+format, v...)
 	}
 }
 
 func (l *Logger) Debug(format string, v ...any) {
 	if l.level >= syslog.LOG_DEBUG {
-		l.logger.SetPrefix("[debug] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[debug] "+format, v...)
 	}
 }
 
 func (l *Logger) Emerg(v ...any) {
 	if l.level >= syslog.LOG_EMERG {
-		l.logger.SetPrefix("[emerg] ")
-		l.logger.Print(v...)
+		l.logger.Print("[emerg]", v)
 	}
 }
 
 func (l *Logger) Emergf(format string, v ...any) {
 	if l.level >= syslog.LOG_EMERG {
-		l.logger.SetPrefix("[emerg] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[emerg] "+format, v...)
 	}
 }
 
 func (l *Logger) Error(format string, v ...any) {
 	if l.level >= syslog.LOG_ERR {
-		l.logger.SetPrefix("[error] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[error] "+format, v...)
 	}
 }
 
 func (l *Logger) Fatalf(format string, v ...any) {
-	l.logger.SetPrefix("[crit] ")
-	l.logger.Fatalf(format, v...)
+	l.logger.Fatalf("[crit] "+format, v...)
 }
 
 func (l *Logger) Fatalln(v ...any) {
-	l.logger.SetPrefix("[crit] ")
-	l.logger.Fatalln(v...)
+	l.logger.Fatalln("[crit]", v)
 }
 
 func (l *Logger) Info(format string, v ...any) {
 	if l.level >= syslog.LOG_INFO {
-		l.logger.SetPrefix("[info] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[info] "+format, v...)
 	}
 }
 
 func (l *Logger) Notice(format string, v ...any) {
 	if l.level >= syslog.LOG_NOTICE {
-		l.logger.SetPrefix("[notice] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[notice] "+format, v...)
 	}
 }
 
 func (l *Logger) Warn(format string, v ...any) {
 	if l.level >= syslog.LOG_WARNING {
-		l.logger.SetPrefix("[warn] ")
-		l.logger.Printf(format, v...)
+		l.logger.Printf("[warn] "+format, v...)
 	}
 }
