@@ -1,6 +1,7 @@
 package card
 
 import (
+	"fmt"
 	"net"
 	"sync"
 
@@ -27,7 +28,8 @@ func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logge
 	}
 }
 
-func getTrapInfo(packet *g.SnmpPacket) (oid, desc string) {
+func getTrapInfo(packet *g.SnmpPacket, logger *log.Logger) (oid, desc string) {
+
 	for _, v := range packet.Variables {
 		if v.Type == g.OctetString {
 			oid = v.Name
@@ -35,6 +37,26 @@ func getTrapInfo(packet *g.SnmpPacket) (oid, desc string) {
 			break
 		}
 	}
+
+	if len(oid) == 0 {
+		for i, v := range packet.Variables {
+			var val string
+			switch v.Type {
+			case g.ObjectIdentifier:
+				val = fmt.Sprintf("%s", v.Value)
+			case g.TimeTicks:
+				a := g.ToBigInt(v.Value)
+				val = fmt.Sprintf("%d", (*a).Int64())
+			case g.Null:
+				val = ""
+			default:
+				a := g.ToBigInt(v.Value)
+				val = fmt.Sprintf("%d", (*a).Int64())
+			}
+			logger.Debug("- oid[%d]: %s (%s) = %v \n", i, v.Name, v.Type, val)
+		}
+	}
+
 	return
 }
 
@@ -47,7 +69,7 @@ func trapHandler(packet *g.SnmpPacket, addr *net.UDPAddr, trapAcl net.IP, logger
 
 	wg.Add(1)
 
-	oid, desc := getTrapInfo(packet)
+	oid, desc := getTrapInfo(packet, logger)
 
 	if ts, ok := traps[oid]; ok {
 		logger.Notice("Got trap '%s', %s", ts.name, desc)
