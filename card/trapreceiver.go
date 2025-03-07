@@ -39,11 +39,18 @@ func getTrapInfo(packet *g.SnmpPacket, logger *log.Logger) (oid, desc string) {
 	}
 
 	if len(oid) == 0 {
+	ex:
 		for i, v := range packet.Variables {
 			var val string
 			switch v.Type {
 			case g.ObjectIdentifier:
 				val = fmt.Sprintf("%s", v.Value)
+				if ts, ok := traps[val]; ok {
+					oid = val
+					desc = ts.desc
+					break ex
+				}
+
 			case g.TimeTicks:
 				a := g.ToBigInt(v.Value)
 				val = fmt.Sprintf("%d", (*a).Int64())

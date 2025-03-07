@@ -4,9 +4,12 @@ type trapSpec struct {
 	name     string // имя трапа
 	send     bool   // отправлять ли оповещение о трапе в канал
 	shutdown bool   // должен ли приводить трап к немедленному завершению работы ОС
+	desc     string // описание трапа
 }
 
 var traps = map[string]trapSpec{
+	".1.3.6.1.6.3.1.1.5.1":  trapSpec{name: "coldStart", desc: "UPS Cold Start"},
+	".1.3.6.1.6.3.1.1.5.2":  trapSpec{name: "warmStart", desc: "UPS Warm Start"},
 	".1.3.6.1.4.1.935.0.1":  trapSpec{name: "communicationLost"},
 	".1.3.6.1.4.1.935.0.2":  trapSpec{name: "upsOverLoad"},
 	".1.3.6.1.4.1.935.0.3":  trapSpec{name: "upsDiagnosticsFailed"},

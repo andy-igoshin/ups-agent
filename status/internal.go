@@ -214,18 +214,6 @@ func getLowBatteryRunTime(st map[string]any) (t string) {
 	return
 }
 
-func getTransferVoltage(st map[string]any) string {
-	var l float64
-	var h float64
-	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
-		l = float64(v.(int)) / 10
-	}
-	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
-		h = float64(v.(int)) / 10
-	}
-	return fmt.Sprintf("%.1f/%.1f В", l, h)
-}
-
 func getMinReturnCapacity(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigMinReturnCapacity]; ok {
 		l = fmt.Sprintf("%d%%", v)
@@ -335,6 +323,23 @@ func getShutoffDelay(st map[string]any) (t string) {
 			t = d.String()
 		}
 	}
+	return
+}
+
+func getTransferVoltage(st map[string]any) (tv string) {
+	var l float64
+	var h float64
+	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
+		l = float64(v.(int)) / 10
+	}
+	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
+		h = float64(v.(int)) / 10
+	}
+
+	if l != 0.0 || h != 0.0 {
+		tv = fmt.Sprintf("%.1f/%.1f В", l, h)
+	}
+
 	return
 }
 

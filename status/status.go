@@ -35,7 +35,11 @@ func Print(conf *config.Config) {
 	fmt.Printf(form, "Return Delay", getReturnDelay(st))
 	fmt.Printf(form, "Shutoff Delay", getShutoffDelay(st))
 	fmt.Printf(form, "Low Battery RunTime", getLowBatteryRunTime(st))
-	fmt.Printf(form, "Transfer Voltage", getTransferVoltage(st))
+
+	if tv := getTransferVoltage(st); len(tv) > 0 {
+		fmt.Printf(form, "Transfer Voltage", tv)
+	}
+
 	fmt.Printf(form, "Min Return Capacity", getMinReturnCapacity(st))
 	fmt.Printf(form, "Battery Temperature", getBatteryTemperature(st))
 	fmt.Printf(form, "Battery Voltage", getBatteryVoltage(st))
