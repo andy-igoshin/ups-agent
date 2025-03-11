@@ -20,8 +20,8 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 	for {
 		select {
 		case trap := <-trapc:
-			if card.NeedPoweroff(trap) {
-				p.Poweroff(fmt.Sprintf("Initiated system shutdown process, trap %s", trap))
+			if card.TrapClaimPoweroff(trap) {
+				p.Poweroff(fmt.Sprintf("Initiated system shutdown process, trap(%s)", trap))
 			}
 		case <-time.After(conf.Snmp.PollTime):
 			// next polling

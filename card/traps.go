@@ -21,7 +21,7 @@ var traps = map[string]trapSpec{
 	".1.3.6.1.4.1.935.0.9":  trapSpec{name: "powerRestored", send: true},
 	".1.3.6.1.4.1.935.0.10": trapSpec{name: "upsDiagnosticsPassed"},
 	".1.3.6.1.4.1.935.0.11": trapSpec{name: "returnFromLowBattery", send: true},
-	".1.3.6.1.4.1.935.0.12": trapSpec{name: "upsTurnedOff", send: true},
+	".1.3.6.1.4.1.935.0.12": trapSpec{name: "upsTurnedOff", send: true, shutdown: true},
 	".1.3.6.1.4.1.935.0.13": trapSpec{name: "upsSleeping", send: true},
 	".1.3.6.1.4.1.935.0.14": trapSpec{name: "upsWokeUp", send: true},
 	".1.3.6.1.4.1.935.0.15": trapSpec{name: "upsRebootStarted", send: true},

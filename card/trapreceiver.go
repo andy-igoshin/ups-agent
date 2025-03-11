@@ -50,10 +50,8 @@ func getTrapInfo(packet *g.SnmpPacket, logger *log.Logger) (oid, desc string) {
 					desc = ts.desc
 					break ex
 				}
-
 			case g.TimeTicks:
-				a := g.ToBigInt(v.Value)
-				val = fmt.Sprintf("%d", (*a).Int64())
+				continue
 			case g.Null:
 				val = ""
 			default:
