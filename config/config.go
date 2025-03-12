@@ -10,12 +10,18 @@ import (
 	"github.com/jinzhu/configor"
 )
 
+const (
+	cliUnknown = iota
+	cliStatus
+	cliUpsConfigGet
+	cliUpsConfigSet
+	cliUpsConfigDefault
+)
+
 type Config struct {
 	Hostname string
 	UpsName  string
 	Model    string
-
-	StatusCli bool
 
 	Logger struct {
 		LogDir   string `default:"logs"`
@@ -29,6 +35,7 @@ type Config struct {
 		BatteryLevel int           `default:"10"`
 		Minutes      time.Duration `default:"10m"`
 		Timeout      time.Duration `default:"0s"`
+		UpsPoweroff  bool
 	}
 
 	Snmp struct {
@@ -52,6 +59,8 @@ type Config struct {
 		ShutoffDelay       time.Duration
 		UpsSleepTime       time.Duration `default:"-1s"`
 	}
+
+	cliType int
 }
 
 func New() *Config {
@@ -64,11 +73,13 @@ func New() *Config {
 	var configdump bool
 	var configtest bool
 	var status bool
+	var upsconfig string
 
 	flag.StringVar(&configfile, "config", filepath.Join(dir, "ups-agent.yml"), "Set configuration file")
 	flag.BoolVar(&configdump, "configdump", false, "Perform configuration file dump")
 	flag.BoolVar(&configtest, "configtest", false, "Perform configuration file test")
 	flag.BoolVar(&status, "status", false, "Print UPS status")
+	flag.StringVar(&upsconfig, "upsconfig", "", "`get|set|default` UPS configuration")
 	flag.Parse()
 
 	err := configor.Load(config, configfile)
@@ -87,7 +98,11 @@ func New() *Config {
 	}
 
 	if status {
-		config.StatusCli = status
+		config.cliType = cliStatus
+	}
+
+	if len(upsconfig) > 0 {
+		config.cliType = cliUpsConfigType(upsconfig)
 	}
 
 	if configdump {
@@ -101,4 +116,33 @@ func New() *Config {
 	}
 
 	return config
+}
+
+func (c *Config) IsStatus() (t bool) {
+	if c.cliType == cliStatus {
+		t = true
+	}
+	return
+}
+
+func (c *Config) IsUpsConfig() (t bool) {
+	if c.cliType >= cliUpsConfigGet {
+		t = true
+	}
+	return
+}
+
+func cliUpsConfigType(o string) (t int) {
+	switch o {
+	case "get":
+		t = cliUpsConfigGet
+	case "set":
+		t = cliUpsConfigSet
+	case "default":
+		t = cliUpsConfigDefault
+	default:
+		fmt.Println("upsconfig: unknown operation:", o)
+		os.Exit(1)
+	}
+	return
 }

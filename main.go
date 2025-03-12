@@ -13,8 +13,11 @@ func main() {
 
 	conf := config.New()
 
-	if conf.StatusCli {
+	if conf.IsStatus() {
 		status.Print(conf)
+		return
+	}
+	if conf.IsUpsConfig() {
 		return
 	}
 

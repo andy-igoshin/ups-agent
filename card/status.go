@@ -6,7 +6,7 @@ import (
 	g "github.com/gosnmp/gosnmp"
 )
 
-var status = []string{
+var statusOids = []string{
 	SysDescr,
 	UpsOutputCurrent,
 	UpsBaseIdentModel,
@@ -63,7 +63,7 @@ func Status(addr, community string) (map[string]any, error) {
 	}
 	defer snmp.Conn.Close()
 
-	res, err := snmp.Get(status)
+	res, err := snmp.Get(statusOids)
 	if err != nil {
 		return nil, fmt.Errorf("snmp get(): %s", err)
 	}

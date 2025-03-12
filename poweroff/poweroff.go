@@ -6,29 +6,35 @@ import (
 	"os/exec"
 	"sync"
 	"syscall"
+	"time"
 
 	"git.vsu.ru/ai/ups-agent/config"
 	"git.vsu.ru/ai/ups-agent/log"
 )
 
 type PowerOff struct {
-	cmd  *exec.Cmd
-	log  *log.Logger
-	run  bool
 	once sync.Once
+	log  *log.Logger
+	cmd  *exec.Cmd
+	host bool // выполнять ли выключение хоста
+	ups  bool // выполнять ли выключение ИБП
 }
 
 func New(conf *config.Config, logger *log.Logger) *PowerOff {
 	p := PowerOff{}
 	p.cmd = exec.Command(conf.PowerCtl.PoweroffCmd)
 	p.log = logger
-	p.run = conf.PowerCtl.Poweroff
+	p.host = conf.PowerCtl.Poweroff
+	p.ups = conf.PowerCtl.UpsPoweroff
 	return &p
 }
 
 func (p *PowerOff) Poweroff(msg string) {
 	p.once.Do(func() {
-		if p.run {
+		if p.host {
+			if p.ups {
+				time.Sleep(2 * time.Second)
+			}
 			p.poweroff(msg)
 		}
 	})

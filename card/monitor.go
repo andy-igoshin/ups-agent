@@ -16,7 +16,7 @@ type MonitorData struct {
 	UpsBaseOutputStatus             int
 }
 
-var monitor = []string{
+var monitorOids = []string{
 	UpsBaseBatteryStatus,
 	UpsBaseBatteryTimeOnBattery,
 	UpsSmartBatteryCapacity,
@@ -41,7 +41,7 @@ func Monitor(addr, community string) (*MonitorData, error) {
 	}
 	defer snmp.Conn.Close()
 
-	res, err := snmp.Get(monitor)
+	res, err := snmp.Get(monitorOids)
 	if err != nil {
 		return nil, fmt.Errorf("snmp get(): %s", err)
 	}
