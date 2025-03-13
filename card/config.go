@@ -55,7 +55,7 @@ func GetConfig(addr, community string) (map[string]any, error) {
 	return st, nil
 }
 
-func SetConfig(addr, community string, data map[string]int) error {
+func SetOids(addr, community string, data map[string]int) error {
 
 	pdus := make([]g.SnmpPDU, 0, len(data))
 

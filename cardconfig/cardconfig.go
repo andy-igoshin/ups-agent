@@ -58,7 +58,7 @@ func setDefaultConfig(conf *config.Config) {
 	data[card.UpsSmartConfigShutoffDelay] = 120        // секунд
 	data[card.UpsSmartConfigUpsSleepTime] = 2          // минут
 
-	err := card.SetConfig(conf.Snmp.Addr, conf.Snmp.Community, data)
+	err := card.SetOids(conf.Snmp.Addr, conf.Snmp.Community, data)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -165,7 +165,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigUpsSleepTime] = int(c.UpsSleepTime / time.Minute)
 	}
 
-	err := card.SetConfig(conf.Snmp.Addr, conf.Snmp.Community, data)
+	err := card.SetOids(conf.Snmp.Addr, conf.Snmp.Community, data)
 	if err != nil {
 		fmt.Println(err)
 	}
