@@ -2,7 +2,6 @@ package status
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -206,10 +205,8 @@ func getLineVoltage(st map[string]any) string {
 
 func getLowBatteryRunTime(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigLowBatteryRunTime]; ok {
-		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
-		if err == nil {
-			t = d.String()
-		}
+		d := time.Duration(v.(int)) * time.Second
+		t = d.String()
 	}
 	return
 }
@@ -282,20 +279,16 @@ func getOutputVoltageVolt(st map[string]any) (vo float64) {
 
 func getReturnDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigReturnDelay]; ok {
-		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
-		if err == nil {
-			t = d.String()
-		}
+		d := time.Duration(v.(int)) * time.Second
+		t = d.String()
 	}
 	return
 }
 
 func getRunTimeRemaining(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartBatteryRunTimeRemaining]; ok {
-		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
-		if err == nil {
-			t = d.String()
-		}
+		d := time.Duration(v.(int)) * time.Second
+		t = d.String()
 	}
 	return
 }
@@ -318,10 +311,8 @@ func getSensitivity(st map[string]any) (s string) {
 
 func getShutoffDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigShutoffDelay]; ok {
-		d, err := time.ParseDuration(strconv.Itoa(v.(int)) + "s")
-		if err == nil {
-			t = d.String()
-		}
+		d := time.Duration(v.(int)) * time.Second
+		t = d.String()
 	}
 	return
 }

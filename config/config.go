@@ -47,17 +47,17 @@ type Config struct {
 	}
 
 	CardConfig struct {
-		RatedOutputVoltage int
-		HighTransferVolt   int
-		LowTransferVolt    int
-		Alarm              int
+		RatedOutputVoltage int           `default:"-1"`
+		HighTransferVolt   int           `default:"-1"`
+		LowTransferVolt    int           `default:"-1"`
+		Alarm              int           `default:"-1"`
 		AlarmTimer         time.Duration `default:"-1s"`
 		MinReturnCapacity  int           `default:"-1"`
-		Sensitivity        int
-		LowBatteryRunTime  time.Duration
+		Sensitivity        int           `default:"-1"`
+		LowBatteryRunTime  time.Duration `default:"-1s"`
 		ReturnDelay        time.Duration `default:"-1s"`
-		ShutoffDelay       time.Duration
-		UpsSleepTime       time.Duration `default:"-1s"`
+		ShutoffDelay       time.Duration `default:"-1s"`
+		UpsSleepTime       time.Duration `default:"-1m"`
 	}
 
 	cliType int
