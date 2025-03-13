@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	cliUnknown = iota
-	cliStatus
-	cliUpsConfigGet
-	cliUpsConfigSet
-	cliUpsConfigDefault
+	CliUnknown = iota
+	CliCardConfigGet
+	CliCardConfigSet
+	CliCardConfigDefault
+	CliStatus
 )
 
 type Config struct {
@@ -46,7 +46,7 @@ type Config struct {
 		TrapListener  string
 	}
 
-	UpsConfig struct {
+	CardConfig struct {
 		RatedOutputVoltage int
 		HighTransferVolt   int
 		LowTransferVolt    int
@@ -73,13 +73,13 @@ func New() *Config {
 	var configdump bool
 	var configtest bool
 	var status bool
-	var upsconfig string
+	var cardconfig string
 
-	flag.StringVar(&configfile, "config", filepath.Join(dir, "ups-agent.yml"), "Set configuration file")
+	flag.StringVar(&cardconfig, "cardconfig", "", "Perform `get|set|default` UPS configuration")
+	flag.StringVar(&configfile, "config", filepath.Join(dir, "ups-agent.yml"), "Set configuration file `path`")
 	flag.BoolVar(&configdump, "configdump", false, "Perform configuration file dump")
 	flag.BoolVar(&configtest, "configtest", false, "Perform configuration file test")
 	flag.BoolVar(&status, "status", false, "Print UPS status")
-	flag.StringVar(&upsconfig, "upsconfig", "", "`get|set|default` UPS configuration")
 	flag.Parse()
 
 	err := configor.Load(config, configfile)
@@ -98,11 +98,11 @@ func New() *Config {
 	}
 
 	if status {
-		config.cliType = cliStatus
+		config.cliType = CliStatus
 	}
 
-	if len(upsconfig) > 0 {
-		config.cliType = cliUpsConfigType(upsconfig)
+	if len(cardconfig) > 0 {
+		config.cliType = cliCardConfigType(cardconfig)
 	}
 
 	if configdump {
@@ -118,31 +118,40 @@ func New() *Config {
 	return config
 }
 
-func (c *Config) IsStatus() (t bool) {
-	if c.cliType == cliStatus {
+func (c *Config) CardOp() (op int) {
+	switch c.cliType {
+	case CliCardConfigGet, CliCardConfigSet, CliCardConfigDefault:
+		op = c.cliType
+	}
+	return
+}
+
+func (c *Config) IsCardConfig() (t bool) {
+	switch c.cliType {
+	case CliCardConfigGet, CliCardConfigSet, CliCardConfigDefault:
 		t = true
 	}
 	return
 }
 
-func (c *Config) IsUpsConfig() (t bool) {
-	if c.cliType >= cliUpsConfigGet {
-		t = true
-	}
-	return
-}
-
-func cliUpsConfigType(o string) (t int) {
+func cliCardConfigType(o string) (t int) {
 	switch o {
 	case "get":
-		t = cliUpsConfigGet
+		t = CliCardConfigGet
 	case "set":
-		t = cliUpsConfigSet
+		t = CliCardConfigSet
 	case "default":
-		t = cliUpsConfigDefault
+		t = CliCardConfigDefault
 	default:
-		fmt.Println("upsconfig: unknown operation:", o)
+		fmt.Println("cardconfig: unknown operation:", o)
 		os.Exit(1)
+	}
+	return
+}
+
+func (c *Config) IsStatus() (t bool) {
+	if c.cliType == CliStatus {
+		t = true
 	}
 	return
 }

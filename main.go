@@ -3,6 +3,7 @@ package main
 import (
 	"sync"
 
+	"git.vsu.ru/ai/ups-agent/cardconfig"
 	"git.vsu.ru/ai/ups-agent/config"
 	"git.vsu.ru/ai/ups-agent/log"
 	"git.vsu.ru/ai/ups-agent/monitor"
@@ -17,7 +18,8 @@ func main() {
 		status.Print(conf)
 		return
 	}
-	if conf.IsUpsConfig() {
+	if conf.IsCardConfig() {
+		cardconfig.Run(conf)
 		return
 	}
 
