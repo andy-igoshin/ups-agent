@@ -49,13 +49,14 @@ func setDefaultConfig(conf *config.Config) {
 
 	data := make(map[string]int, 7)
 
-	data[card.UpsSmartConfigAlarm] = 3               // Никогда (3)
-	data[card.UpsSmartConfigMinReturnCapacity] = 0   // 0%
-	data[card.UpsSmartConfigSensitivity] = 1         // Авто (1)
-	data[card.UpsSmartConfigLowBatteryRunTime] = 120 // секунд
-	data[card.UpsSmartConfigReturnDelay] = 60        // секунд
-	data[card.UpsSmartConfigShutoffDelay] = 120      // секунд
-	data[card.UpsSmartConfigUpsSleepTime] = 2        // минут
+	data[card.UpsSmartConfigRatedOutputVoltage] = 2300 // 230 В
+	data[card.UpsSmartConfigAlarm] = 3                 // Никогда (3)
+	data[card.UpsSmartConfigMinReturnCapacity] = 0     // 0%
+	data[card.UpsSmartConfigSensitivity] = 1           // Авто (1)
+	data[card.UpsSmartConfigLowBatteryRunTime] = 120   // секунд
+	data[card.UpsSmartConfigReturnDelay] = 60          // секунд
+	data[card.UpsSmartConfigShutoffDelay] = 120        // секунд
+	data[card.UpsSmartConfigUpsSleepTime] = 2          // минут
 
 	err := card.SetConfig(conf.Snmp.Addr, conf.Snmp.Community, data)
 	if err != nil {
