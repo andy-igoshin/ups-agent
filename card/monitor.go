@@ -50,6 +50,10 @@ func Monitor(addr, community string) (*MonitorData, error) {
 
 	for _, v := range res.Variables {
 
+		if v.Value == nil {
+			continue
+		}
+
 		switch v.Name {
 		case UpsBaseBatteryStatus:
 			md.UpsBaseBatteryStatus = v.Value.(int)

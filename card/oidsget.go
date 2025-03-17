@@ -30,6 +30,11 @@ func getOids(addr, community string, oids []string) (map[string]any, error) {
 	st := make(map[string]any, len(res.Variables))
 
 	for _, v := range res.Variables {
+
+		if v.Value == nil {
+			continue
+		}
+
 		switch v.Type {
 		case g.OctetString:
 			st[v.Name] = string(v.Value.([]byte))
