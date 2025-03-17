@@ -47,7 +47,7 @@ func printConfig(conf *config.Config) {
 
 func setDefaultConfig(conf *config.Config) {
 
-	data := make(map[string]int, 7)
+	data := make(map[string]int, 8)
 
 	data[card.UpsSmartConfigRatedOutputVoltage] = 2300 // 230 В
 	data[card.UpsSmartConfigAlarm] = 3                 // Никогда (3)
@@ -69,6 +69,7 @@ func writeConfig(conf *config.Config) {
 	c := conf.CardConfig
 	data := make(map[string]int, 11)
 
+	// UpsSmartConfigRatedOutputVoltage
 	switch c.RatedOutputVoltage {
 	case 220, 225, 230, 240:
 		data[card.UpsSmartConfigRatedOutputVoltage] = c.RatedOutputVoltage * 10
@@ -78,6 +79,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigHighTransferVolt
 	switch c.HighTransferVolt {
 	case 253, 264, 271, 280:
 		data[card.UpsSmartConfigHighTransferVolt] = c.HighTransferVolt * 10
@@ -87,6 +89,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigLowTransferVolt
 	switch c.LowTransferVolt {
 	case 188, 196, 204, 208:
 		data[card.UpsSmartConfigLowTransferVolt] = c.LowTransferVolt * 10
@@ -96,6 +99,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigAlarm
 	switch c.Alarm {
 	case 1, 2, 3:
 		data[card.UpsSmartConfigAlarm] = c.Alarm
@@ -105,6 +109,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigAlarmTimer
 	switch int(c.AlarmTimer / time.Second) {
 	case 0, 30:
 		data[card.UpsSmartConfigAlarmTimer] = int(c.AlarmTimer / time.Second)
@@ -114,6 +119,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigMinReturnCapacity
 	switch c.MinReturnCapacity {
 	case 0, 10, 25, 90:
 		data[card.UpsSmartConfigMinReturnCapacity] = c.MinReturnCapacity
@@ -123,6 +129,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigSensitivity
 	switch c.Sensitivity {
 	case 1, 2, 3, 4:
 		data[card.UpsSmartConfigSensitivity] = c.Sensitivity
@@ -132,6 +139,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigLowBatteryRunTime
 	switch int(c.LowBatteryRunTime / time.Second) {
 	case 120, 300, 420, 600:
 		data[card.UpsSmartConfigLowBatteryRunTime] = int(c.LowBatteryRunTime / time.Second)
@@ -141,6 +149,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigReturnDelay
 	switch int(c.ReturnDelay / time.Second) {
 	case 0, 60, 180, 300:
 		data[card.UpsSmartConfigReturnDelay] = int(c.ReturnDelay / time.Second)
@@ -150,6 +159,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigShutoffDelay
 	switch int(c.ShutoffDelay / time.Second) {
 	case 12, 18, 24, 30, 36, 42, 48, 54, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600:
 		data[card.UpsSmartConfigShutoffDelay] = int(c.ShutoffDelay / time.Second)
@@ -159,6 +169,7 @@ func writeConfig(conf *config.Config) {
 		return
 	}
 
+	// UpsSmartConfigUpsSleepTime
 	switch int(c.UpsSleepTime / time.Minute) {
 	case -1:
 	default:
