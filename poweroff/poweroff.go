@@ -13,19 +13,25 @@ import (
 )
 
 type PowerOff struct {
-	once sync.Once
-	log  *log.Logger
-	cmd  *exec.Cmd
-	host bool // выполнять ли выключение хоста
-	ups  bool // выполнять ли выключение ИБП
+	once        sync.Once
+	logger      *log.Logger
+	cmd         *exec.Cmd
+	host        bool // выполнять ли выключение хоста
+	ups         bool // выполнять ли выключение ИБП
+	upspoweroff func(string, string) error
+	addr        string
+	community   string
 }
 
-func New(conf *config.Config, logger *log.Logger) *PowerOff {
+func New(conf *config.Config, logger *log.Logger, upspoweroff func(string, string) error) *PowerOff {
 	p := PowerOff{}
+	p.logger = logger
 	p.cmd = exec.Command(conf.PowerCtl.PoweroffCmd)
-	p.log = logger
 	p.host = conf.PowerCtl.Poweroff
 	p.ups = conf.PowerCtl.UpsPoweroff
+	p.upspoweroff = upspoweroff
+	p.addr = conf.Snmp.Addr
+	p.community = conf.Snmp.Community
 	return &p
 }
 
@@ -33,16 +39,21 @@ func (p *PowerOff) Poweroff(msg string) {
 	p.once.Do(func() {
 		if p.host {
 			if p.ups {
-				time.Sleep(2 * time.Second)
+				p.logger.Notice("Sending 'upsSmartControlUpsOff' to UPS")
+				err := p.upspoweroff(p.addr, p.community)
+				if err != nil {
+					p.logger.Error("%s", err)
+				}
+				time.Sleep(5 * time.Second)
 			}
-			p.poweroff(msg)
+			p.hostpoweroff(msg)
 		}
 	})
 }
 
-func (p *PowerOff) poweroff(msg string) {
+func (p *PowerOff) hostpoweroff(msg string) {
 
-	p.log.Emerg(msg)
+	p.logger.Emerg(msg)
 
 	syscall.Sync()
 	syscall.Sync()
@@ -50,12 +61,12 @@ func (p *PowerOff) poweroff(msg string) {
 
 	err := syscall.Seteuid(0)
 	if err != nil {
-		p.log.Error("Poweroff Seteuid(0): %s", err)
+		p.logger.Error("Poweroff Seteuid(0): %s", err)
 		return
 	}
 
 	err = p.cmd.Run()
 	if err != nil {
-		p.log.Error("Poweroff Run(): %s", err)
+		p.logger.Error("Poweroff Run(): %s", err)
 	}
 }

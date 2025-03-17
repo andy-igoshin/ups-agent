@@ -38,6 +38,7 @@ const (
 	UpsSmartConfigShutoffDelay         = ".1.3.6.1.4.1.935.1.1.1.5.2.10.0"
 	UpsSmartConfigUpsSleepTime         = ".1.3.6.1.4.1.935.1.1.1.5.2.11.0"
 	UpsSmartConfigSetEEPROMDefaults    = ".1.3.6.1.4.1.935.1.1.1.5.2.12.0"
+	UpsSmartControlUpsOff              = ".1.3.6.1.4.1.935.1.1.1.6.2.1.0"
 	UpsSmartTestDiagnosticSchedule     = ".1.3.6.1.4.1.935.1.1.1.7.2.1.0"
 	UpsSmartTestDiagnosticsResults     = ".1.3.6.1.4.1.935.1.1.1.7.2.3.0"
 	UpsSmartTestLastDiagnosticsDate    = ".1.3.6.1.4.1.935.1.1.1.7.2.4.0"

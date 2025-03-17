@@ -15,7 +15,7 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 
 	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc, wg)
 
-	p := poweroff.New(conf, logger)
+	p := poweroff.New(conf, logger, card.Poweroff)
 
 	for {
 		select {
@@ -39,9 +39,9 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.Wa
 			continue
 
 		case card.UpsBaseOutputStatusOnBattery:
-			logger.Alert("UPS run on battery power, TimeOnBattery(%s), BatteryCapacity(%d%%), RunTimeRemaining(%s)",
-				md.UpsBaseBatteryTimeOnBattery,
+			logger.Alert("UPS run on battery power, BatteryCapacity(%d%%), TimeOnBattery(%s), RunTimeRemaining(%s)",
 				md.UpsSmartBatteryCapacity,
+				md.UpsBaseBatteryTimeOnBattery,
 				md.UpsSmartBatteryRunTimeRemaining)
 
 		case card.UpsBaseOutputStatusBypass:
