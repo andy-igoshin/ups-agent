@@ -1,0 +1,12 @@
+/var/log/ups-agent/*.log {
+	rotate 4
+	daily
+	missingok
+	notifempty
+	compress
+	delaycompress
+	sharedscripts
+	postrotate
+		pkill -HUP ups-agent
+	endscript
+}
