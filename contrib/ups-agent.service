@@ -4,7 +4,7 @@ ConditionPathExists=/opt/ups-agent/ups-agent
 After=network-online.target
 
 [Service]
-Type=exec
+Type=simple
 User=ups-agent
 Group=ups-agent
 
