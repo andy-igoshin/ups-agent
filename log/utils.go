@@ -1,73 +1,67 @@
 package log
 
-import (
-	"log/syslog"
-)
-
-func (l *Logger) getLevel(ls string) syslog.Priority {
-
-	var lev syslog.Priority
+func (l *Logger) getLevel(ls string) (lev int) {
 
 	switch ls {
 	case "emerg":
-		lev = syslog.LOG_EMERG
+		lev = log_EMERG
 
 	case "alert":
-		lev = syslog.LOG_ALERT
+		lev = log_ALERT
 
 	case "crit":
-		lev = syslog.LOG_CRIT
+		lev = log_CRIT
 
 	case "error":
-		lev = syslog.LOG_ERR
+		lev = log_ERR
 
 	case "warn":
-		lev = syslog.LOG_WARNING
+		lev = log_WARNING
 
 	case "notice":
-		lev = syslog.LOG_NOTICE
+		lev = log_NOTICE
 
 	case "info":
-		lev = syslog.LOG_INFO
+		lev = log_INFO
 
 	case "debug":
-		lev = syslog.LOG_DEBUG
+		lev = log_DEBUG
 
 	default:
-		lev = syslog.LOG_INFO
+		lev = log_INFO
 		l.Warn("Logger has incorrect log level '%s', default level 'info' assumed", ls)
 	}
 
-	return lev
+	return
 }
 
-func getLevelString(lev syslog.Priority) string {
+func getLevelString(lev int) string {
 
 	var ls string
 
 	switch lev {
-	case syslog.LOG_EMERG:
+	case log_EMERG:
 		ls = "emerg"
 
-	case syslog.LOG_ALERT:
+	case log_ALERT:
 		ls = "alert"
 
-	case syslog.LOG_CRIT:
+	case log_CRIT:
 		ls = "crit"
 
-	case syslog.LOG_ERR:
+	case log_ERR:
 		ls = "error"
 
-	case syslog.LOG_WARNING:
+	case log_WARNING:
 		ls = "warn"
 
-	case syslog.LOG_NOTICE:
+	case log_NOTICE:
 		ls = "notice"
 
-	case syslog.LOG_INFO:
+	case log_INFO:
 		ls = "info"
 
-	case syslog.LOG_DEBUG:
+	case log_DEBUG:
 		ls = "debug"
 	}
 
