@@ -65,62 +65,62 @@ func (l *Logger) Reopen() {
 
 func (l *Logger) Alert(format string, v ...any) {
 	if l.level >= log_ALERT {
-		l.logger.Printf("[alert] "+format, v...)
+		l.logger.Printf("[alert] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Crit(format string, v ...any) {
 	if l.level >= log_CRIT {
-		l.logger.Printf("[crit] "+format, v...)
+		l.logger.Printf("[crit] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Debug(format string, v ...any) {
 	if l.level >= log_DEBUG {
-		l.logger.Printf("[debug] "+format, v...)
+		l.logger.Printf("[debug] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Emerg(v ...any) {
 	if l.level >= log_EMERG {
-		l.logger.Print("[emerg]", v)
+		l.logger.Print("[emerg]", v, eol)
 	}
 }
 
 func (l *Logger) Emergf(format string, v ...any) {
 	if l.level >= log_EMERG {
-		l.logger.Printf("[emerg] "+format, v...)
+		l.logger.Printf("[emerg] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Error(format string, v ...any) {
 	if l.level >= log_ERR {
-		l.logger.Printf("[error] "+format, v...)
+		l.logger.Printf("[error] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Fatalf(format string, v ...any) {
-	l.logger.Fatalf("[crit] "+format, v...)
+	l.logger.Fatalf("[crit] "+format+eol, v...)
 }
 
 func (l *Logger) Fatalln(v ...any) {
-	l.logger.Fatalln("[crit]", v)
+	l.logger.Fatal("[crit]", v, eol)
 }
 
 func (l *Logger) Info(format string, v ...any) {
 	if l.level >= log_INFO {
-		l.logger.Printf("[info] "+format, v...)
+		l.logger.Printf("[info] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Notice(format string, v ...any) {
 	if l.level >= log_NOTICE {
-		l.logger.Printf("[notice] "+format, v...)
+		l.logger.Printf("[notice] "+format+eol, v...)
 	}
 }
 
 func (l *Logger) Warn(format string, v ...any) {
 	if l.level >= log_WARNING {
-		l.logger.Printf("[warn] "+format, v...)
+		l.logger.Printf("[warn] "+format+eol, v...)
 	}
 }

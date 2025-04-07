@@ -25,4 +25,5 @@ elif [ "$1" == "vet" ]; then
     go vet ./...
 else
     go build
+    # GOOS=windows GOARCH=amd64 go build -tags windows
 fi
