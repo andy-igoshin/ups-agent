@@ -51,27 +51,32 @@ func Monitor(addr, community string) (*MonitorData, error) {
 	for _, v := range res.Variables {
 
 		if v.Value == nil {
-			continue
+			return nil, fmt.Errorf("OID %s is nil", v.Name)
+		}
+
+		val, ok := v.Value.(int)
+		if !ok {
+			return nil, fmt.Errorf("OID %s: expected int, got %T", v.Name, v.Value)
 		}
 
 		switch v.Name {
 		case UpsBaseBatteryStatus:
-			md.UpsBaseBatteryStatus = v.Value.(int)
+			md.UpsBaseBatteryStatus = val
 
 		case UpsBaseBatteryTimeOnBattery:
-			md.UpsBaseBatteryTimeOnBattery = time.Duration(v.Value.(int)) * time.Second
+			md.UpsBaseBatteryTimeOnBattery = time.Duration(val) * time.Second
 
 		case UpsSmartBatteryCapacity:
-			md.UpsSmartBatteryCapacity = v.Value.(int)
+			md.UpsSmartBatteryCapacity = val
 
 		case UpsSmartBatteryRunTimeRemaining:
-			md.UpsSmartBatteryRunTimeRemaining = time.Duration(v.Value.(int)) * time.Second
+			md.UpsSmartBatteryRunTimeRemaining = time.Duration(val) * time.Second
 
 		case UpsSmartInputLineFailCause:
-			md.UpsSmartInputLineFailCause = v.Value.(int)
+			md.UpsSmartInputLineFailCause = val
 
 		case UpsBaseOutputStatus:
-			md.UpsBaseOutputStatus = v.Value.(int)
+			md.UpsBaseOutputStatus = val
 		}
 	}
 
