@@ -1,10 +1,10 @@
 package cardconfig
 
 import (
-        "fmt"
-        "time"
+	"fmt"
+	"time"
 
-        "git.vsu.ru/ai/ups-agent/card"
+	"git.vsu.ru/ai/ups-agent/card"
 )
 
 func getAlarm(st map[string]any) (s string) {
@@ -31,14 +31,14 @@ func getAlarmTimer(st map[string]any) (t string) {
 
 func getHighTransferVolt(st map[string]any) (h string) {
 	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
-		h = fmt.Sprintf("%.1f В", float64(v.(int)) / 10)
+		h = fmt.Sprintf("%.1f В", float64(v.(int))/10)
 	}
 	return
 }
 
 func getLowTransferVolt(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
-		l = fmt.Sprintf("%.1f В", float64(v.(int)) / 10)
+		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
 	}
 	return
 }
@@ -60,7 +60,7 @@ func getMinReturnCapacity(st map[string]any) (l string) {
 
 func getRatedOutputVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigRatedOutputVoltage]; ok {
-		l = fmt.Sprintf("%.1f В", float64(v.(int)) / 10)
+		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
 	}
 	return
 }

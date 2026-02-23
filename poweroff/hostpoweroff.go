@@ -1,4 +1,5 @@
 //go:build !windows
+
 // Для работы пакета необходим Capability CAP_SETUID
 
 package poweroff
