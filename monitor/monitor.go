@@ -2,7 +2,6 @@ package monitor
 
 import (
 	"fmt"
-	"sync"
 	"time"
 
 	"git.vsu.ru/ai/ups-agent/card"
@@ -11,9 +10,9 @@ import (
 	"git.vsu.ru/ai/ups-agent/poweroff"
 )
 
-func Run(conf *config.Config, logger *log.Logger, trapc chan string, wg *sync.WaitGroup) {
+func Run(conf *config.Config, logger *log.Logger, trapc chan string) {
 
-	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc, wg)
+	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc)
 
 	p := poweroff.New(conf, logger, card.Poweroff)
 

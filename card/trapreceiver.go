@@ -3,15 +3,13 @@ package card
 import (
 	"fmt"
 	"net"
-	"sync"
 
 	g "github.com/gosnmp/gosnmp"
 
 	"git.vsu.ru/ai/ups-agent/log"
 )
 
-func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logger *log.Logger,
-	trapc chan string, wg *sync.WaitGroup) {
+func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logger *log.Logger, trapc chan string) {
 
 	trapAcl := net.ParseIP(srcAddr)
 
@@ -19,12 +17,12 @@ func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logge
 	tl.Params = g.Default
 	tl.Params.Community = trapCommunity
 	tl.OnNewTrap = func(packet *g.SnmpPacket, addr *net.UDPAddr) {
-		trapHandler(packet, addr, trapAcl, logger, trapc, wg)
+		trapHandler(packet, addr, trapAcl, logger, trapc)
 	}
 
 	err := tl.Listen(listenAddr)
 	if err != nil {
-		logger.Fatalf("Listen failed: %s", err)
+		logger.Fatal("Listen failed: %s", err)
 	}
 }
 
@@ -65,14 +63,11 @@ func getTrapInfo(packet *g.SnmpPacket, logger *log.Logger) (oid, desc string) {
 	return
 }
 
-func trapHandler(packet *g.SnmpPacket, addr *net.UDPAddr, trapAcl net.IP, logger *log.Logger,
-	trapw chan<- string, wg *sync.WaitGroup) {
+func trapHandler(packet *g.SnmpPacket, addr *net.UDPAddr, trapAcl net.IP, logger *log.Logger, trapw chan<- string) {
 
 	if !trapAcl.Equal(addr.IP) {
 		return
 	}
-
-	wg.Add(1)
 
 	oid, desc := getTrapInfo(packet, logger)
 
@@ -86,6 +81,4 @@ func trapHandler(packet *g.SnmpPacket, addr *net.UDPAddr, trapAcl net.IP, logger
 	} else {
 		logger.Error("Got unknown trap: %s", oid)
 	}
-
-	wg.Done()
 }
