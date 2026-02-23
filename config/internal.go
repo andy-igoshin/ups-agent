@@ -9,7 +9,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-
 func cliCardConfigType(o string) (t int) {
 	switch o {
 	case "get":
