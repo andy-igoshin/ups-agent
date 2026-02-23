@@ -97,6 +97,8 @@ func New() *Config {
 		config.Hostname = hostname
 	}
 
+	config.PowerCtl.PoweroffCmd = poweroffCmd(config.PowerCtl.PoweroffCmd)
+
 	if status {
 		config.cliType = CliStatus
 	}
@@ -130,21 +132,6 @@ func (c *Config) IsCardConfig() (t bool) {
 	switch c.cliType {
 	case CliCardConfigGet, CliCardConfigSet, CliCardConfigDefault:
 		t = true
-	}
-	return
-}
-
-func cliCardConfigType(o string) (t int) {
-	switch o {
-	case "get":
-		t = CliCardConfigGet
-	case "set":
-		t = CliCardConfigSet
-	case "default":
-		t = CliCardConfigDefault
-	default:
-		fmt.Println("cardconfig: unknown operation:", o)
-		os.Exit(1)
 	}
 	return
 }
