@@ -1,6 +1,6 @@
 module git.vsu.ru/ai/ups-agent
 
-go 1.24
+go 1.25
 
 require (
 	github.com/gosnmp/gosnmp v1.42.1
