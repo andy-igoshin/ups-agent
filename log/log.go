@@ -81,13 +81,7 @@ func (l *Logger) Debug(format string, v ...any) {
 	}
 }
 
-func (l *Logger) Emerg(v ...any) {
-	if l.level >= log_EMERG {
-		l.logger.Print("[emerg]", v, eol)
-	}
-}
-
-func (l *Logger) Emergf(format string, v ...any) {
+func (l *Logger) Emerg(format string, v ...any) {
 	if l.level >= log_EMERG {
 		l.logger.Printf("[emerg] "+format+eol, v...)
 	}
@@ -99,12 +93,8 @@ func (l *Logger) Error(format string, v ...any) {
 	}
 }
 
-func (l *Logger) Fatalf(format string, v ...any) {
+func (l *Logger) Fatal(format string, v ...any) {
 	l.logger.Fatalf("[crit] "+format+eol, v...)
-}
-
-func (l *Logger) Fatalln(v ...any) {
-	l.logger.Fatal("[crit]", v, eol)
 }
 
 func (l *Logger) Info(format string, v ...any) {
