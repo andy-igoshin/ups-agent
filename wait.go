@@ -10,7 +10,7 @@ import (
 
 func waitSignals(logger *log.Logger) {
 	var s os.Signal
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	for {
 		s = <-c
