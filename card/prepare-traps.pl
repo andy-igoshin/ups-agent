@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use String::Util qw(collapse unquote);
 
 my $fn = 'Upsmate.mib';
 my $ent = '.1.3.6.1.4.1.935.0.';
@@ -27,7 +26,7 @@ if ( open(my $fh, $fn) ) {
                 }
             }
 
-            print "\t\"$oid\": trapSpec{name: \"$name\"},\n";
+            print "\t\"$oid\": {name: \"$name\"},\n";
         }
 
     }
