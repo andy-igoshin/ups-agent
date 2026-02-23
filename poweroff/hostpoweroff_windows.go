@@ -4,7 +4,7 @@ package poweroff
 
 func (p *PowerOff) hostpoweroff(msg string) {
 
-	p.logger.Emerg(msg)
+	p.logger.Emerg("%s", msg)
 
 	err := p.cmd.Run()
 	if err != nil {

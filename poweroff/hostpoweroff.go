@@ -10,7 +10,7 @@ import (
 
 func (p *PowerOff) hostpoweroff(msg string) {
 
-	p.logger.Emerg(msg)
+	p.logger.Emerg("%s", msg)
 
 	syscall.Sync()
 	syscall.Sync()
