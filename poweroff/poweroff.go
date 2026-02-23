@@ -43,7 +43,10 @@ func (p *PowerOff) Poweroff(msg string) {
 				if err != nil {
 					p.logger.Error("%s", err)
 				}
-				time.Sleep(5 * time.Second)
+
+				// Wait for SNMP packet to be delivered before host shutdown
+				const hostPoweroffDelay = 5 * time.Second
+				time.Sleep(hostPoweroffDelay)
 			}
 			p.hostpoweroff(msg)
 		}
