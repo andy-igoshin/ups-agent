@@ -6,8 +6,10 @@ export GOPATH="${HOME}/src/ups-agent"
 # результирующий файл, возможно, получится медленнее и большего размера.
 export CGO_ENABLED=0
 
-if   [ "$1" == "fmt" ]; then
-    go fmt $2
+if   [ "$1" == "fix" ]; then
+    go fix -diff ./...
+elif   [ "$1" == "fmt" ]; then
+    go fmt ./...
 elif [ "$1" == "get" ]; then
     go get $2
 elif [ "$1" == "init" ]; then
