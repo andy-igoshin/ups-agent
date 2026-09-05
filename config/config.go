@@ -88,6 +88,11 @@ func New() *Config {
 		os.Exit(1)
 	}
 
+	if err := validate(config); err != nil {
+		fmt.Println("config:", err)
+		os.Exit(1)
+	}
+
 	if len(config.Hostname) == 0 {
 		hostname, err := os.Hostname()
 		if err != nil {

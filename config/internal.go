@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"net"
 	"os"
 	"strings"
 
@@ -50,4 +51,39 @@ func poweroffCmd(c string) string {
 	}
 	os.Exit(1)
 	return ""
+}
+
+func validate(c *Config) error {
+	if c.Snmp.Addr == "" {
+		return errors.New("snmp.addr is empty")
+	}
+
+	if net.ParseIP(c.Snmp.Addr) == nil {
+		return fmt.Errorf("snmp.addr is not a valid IP address: %s", c.Snmp.Addr)
+	}
+
+	if c.Snmp.PollTime <= 0 {
+		return fmt.Errorf("snmp.polltime must be positive, got %s", c.Snmp.PollTime)
+	}
+
+	if c.PowerCtl.BatteryLevel < 0 || c.PowerCtl.BatteryLevel > 100 {
+		return fmt.Errorf("powerctl.batterylevel must be between 0 and 100, got %d",
+			c.PowerCtl.BatteryLevel)
+	}
+
+	if c.PowerCtl.Minutes < 0 {
+		return fmt.Errorf("powerctl.minutes must be >= 0, got %s", c.PowerCtl.Minutes)
+	}
+
+	if c.PowerCtl.Timeout < 0 {
+		return fmt.Errorf("powerctl.timeout must be >= 0, got %s", c.PowerCtl.Timeout)
+	}
+
+	if c.Snmp.TrapListener != "" {
+		if _, _, err := net.SplitHostPort(c.Snmp.TrapListener); err != nil {
+			return fmt.Errorf("snmp.traplistener is invalid: %w", err)
+		}
+	}
+
+	return nil
 }
