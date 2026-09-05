@@ -51,16 +51,20 @@ func (l *Logger) Close() {
 }
 
 func (l *Logger) Reopen() {
-
-	var err error
-
-	l.file.Close()
-	l.file, err = os.OpenFile(path.Join(l.logdir, l.filename), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	newFile, err := os.OpenFile(path.Join(l.logdir, l.filename), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Printf("Reopen log error: %s", err)
+		return
 	}
 
-	l.logger.SetOutput(l.file)
+	oldFile := l.file
+
+	l.logger.SetOutput(newFile)
+	l.file = newFile
+
+	if oldFile != nil {
+		oldFile.Close()
+	}
 }
 
 func (l *Logger) Alert(format string, v ...any) {
