@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export GOPATH="${HOME}/src/ups-agent"
+export GOPATH="${HOME}/src/ups-agent/.gopath"
 
 # если на целевой ОС не совпадает glibc, то собираем без зависимостей.
 # результирующий файл, возможно, получится медленнее и большего размера.
