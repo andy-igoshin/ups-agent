@@ -24,7 +24,7 @@ func main() {
 	logger := log.New(conf)
 	defer logger.Close()
 
-	trapc := make(chan string)
+	trapc := make(chan string, 16)
 
 	go monitor.Run(conf, logger, trapc)
 
