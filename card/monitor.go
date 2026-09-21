@@ -25,23 +25,31 @@ var monitorOids = []string{
 	UpsBaseOutputStatus,
 }
 
-func Monitor(addr, community string) (*MonitorData, error) {
+type Monitor struct {
+	snmp *g.GoSNMP
+}
 
-	snmp := &g.GoSNMP{
-		Target:    addr,
-		Port:      g.Default.Port,
-		Community: community,
-		Version:   g.Default.Version,
-		Timeout:   g.Default.Timeout,
+func NewMonitor(addr, community string) (*Monitor, error) {
+	m := &Monitor{
+		snmp: newSnmpClient(addr, community),
 	}
 
-	err := snmp.Connect()
+	err := m.snmp.Connect()
 	if err != nil {
 		return nil, fmt.Errorf("snmp connect(): %s", err)
 	}
-	defer snmp.Conn.Close()
 
-	res, err := snmp.Get(monitorOids)
+	return m, nil
+}
+
+func (m *Monitor) Close() {
+	if m.snmp != nil && m.snmp.Conn != nil {
+		m.snmp.Conn.Close()
+	}
+}
+
+func (m *Monitor) Poll() (*MonitorData, error) {
+	res, err := m.snmp.Get(monitorOids)
 	if err != nil {
 		return nil, fmt.Errorf("snmp get(): %s", err)
 	}

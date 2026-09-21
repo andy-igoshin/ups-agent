@@ -8,13 +8,7 @@ import (
 
 func getOids(addr, community string, oids []string) (map[string]any, error) {
 
-	snmp := &g.GoSNMP{
-		Target:    addr,
-		Port:      g.Default.Port,
-		Community: community,
-		Version:   g.Default.Version,
-		Timeout:   g.Default.Timeout,
-	}
+	snmp := newSnmpClient(addr, community)
 
 	err := snmp.Connect()
 	if err != nil {

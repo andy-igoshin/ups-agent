@@ -15,13 +15,7 @@ func SetOids(addr, community string, data map[string]int) error {
 		pdus = append(pdus, pdu)
 	}
 
-	snmp := &g.GoSNMP{
-		Target:    addr,
-		Port:      g.Default.Port,
-		Community: community,
-		Version:   g.Default.Version,
-		Timeout:   g.Default.Timeout,
-	}
+	snmp := newSnmpClient(addr, community)
 
 	err := snmp.Connect()
 	if err != nil {

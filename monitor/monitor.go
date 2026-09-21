@@ -16,6 +16,12 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string) {
 
 	p := poweroff.New(conf, logger, card.Poweroff)
 
+	mon, err := card.NewMonitor(conf.Snmp.Addr, conf.Snmp.Community)
+	if err != nil {
+		logger.Fatal("Monitor init failed: %s", err)
+	}
+	defer mon.Close()
+
 	for {
 		select {
 		case trap := <-trapc:
@@ -26,7 +32,7 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string) {
 			// next polling
 		}
 
-		md, err := card.Monitor(conf.Snmp.Addr, conf.Snmp.Community)
+		md, err := mon.Poll()
 		if err != nil {
 			logger.Error("%s", err)
 			continue
