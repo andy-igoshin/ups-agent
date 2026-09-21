@@ -3,6 +3,7 @@ package card
 import (
 	"fmt"
 	"net"
+	"time"
 
 	g "github.com/gosnmp/gosnmp"
 
@@ -13,16 +14,23 @@ func TrapReceiver(listenAddr string, srcAddr string, trapCommunity string, logge
 
 	trapAcl := net.ParseIP(srcAddr)
 
-	tl := g.NewTrapListener()
-	tl.Params = g.Default
-	tl.Params.Community = trapCommunity
-	tl.OnNewTrap = func(packet *g.SnmpPacket, addr *net.UDPAddr) {
-		trapHandler(packet, addr, trapAcl, logger, trapc)
-	}
+	for {
+		tl := g.NewTrapListener()
+		tl.Params = g.Default
+		tl.Params.Community = trapCommunity
+		tl.OnNewTrap = func(packet *g.SnmpPacket, addr *net.UDPAddr) {
+			trapHandler(packet, addr, trapAcl, logger, trapc)
+		}
 
-	err := tl.Listen(listenAddr)
-	if err != nil {
-		logger.Fatal("Listen failed: %s", err)
+		logger.Info("Starting SNMP Trap Listener on %s", listenAddr)
+		err := tl.Listen(listenAddr)
+		if err != nil {
+			logger.Error("Trap Listener failed: %s. Retrying in 10 seconds...", err)
+		} else {
+			logger.Warn("Trap Listener stopped. Retrying in 10 seconds...")
+		}
+
+		time.Sleep(10 * time.Second)
 	}
 }
 
