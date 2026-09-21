@@ -75,7 +75,11 @@ func trapHandler(packet *g.SnmpPacket, addr *net.UDPAddr, trapAcl net.IP, logger
 		logger.Notice("Got trap '%s', %s", ts.name, desc)
 
 		if ts.send {
-			trapw <- oid
+			select {
+			case trapw <- oid:
+			default:
+				logger.Warn("Trap queue is full, dropped trap '%s' (%s)", ts.name, oid)
+			}
 		}
 
 	} else {
