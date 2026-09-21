@@ -17,7 +17,9 @@ func getBatteryCapacity(st map[string]any) (l string) {
 
 func getBatteryLastReplaceDate(st map[string]any) (l string) {
 	if v, ok := st[card.UpsBaseBatteryLastReplaceDate]; ok {
-		l = v.(string)
+		if s, ok := v.(string); ok {
+			l = s
+		}
 	}
 	return
 }
@@ -54,14 +56,18 @@ func getBatteryStatus(st map[string]any) (s string) {
 
 func getBatteryTemperature(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryTemperature]; ok {
-		l = fmt.Sprintf("%.1f ℃ ", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%.1f ℃ ", float64(val)/10)
+		}
 	}
 	return
 }
 
 func getBatteryVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartBatteryVoltage]; ok {
-		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%.1f В", float64(val)/10)
+		}
 	}
 	return
 }
@@ -100,15 +106,19 @@ func getDiagnosticSchedule(st map[string]any) (s string) {
 
 func getEnvHumidity(st map[string]any) (s string) {
 	if v, ok := st[card.UpsEnvHumidity]; ok {
-		if v.(int) > 0 {
-			h := v.(int)
+		if val, ok := v.(int); ok && val > 0 {
+			h := val
 			ho := 0
 			hu := 0
 			if v, ok := st[card.UpsEnvOverHumidity]; ok {
-				ho = v.(int)
+				if valOver, ok := v.(int); ok {
+					ho = valOver
+				}
 			}
 			if v, ok := st[card.UpsEnvUnderHumidity]; ok {
-				hu = v.(int)
+				if valUnder, ok := v.(int); ok {
+					hu = valUnder
+				}
 			}
 			s = fmt.Sprintf("%.d%% (%d/%d)", h, hu, ho)
 		}
@@ -118,15 +128,19 @@ func getEnvHumidity(st map[string]any) (s string) {
 
 func getEnvTemperature(st map[string]any) (s string) {
 	if v, ok := st[card.UpsEnvTemperature]; ok {
-		if v.(int) > 0 {
-			t := float64(v.(int)) / 10
+		if val, ok := v.(int); ok && val > 0 {
+			t := float64(val) / 10
 			to := 0.0
 			tu := 0.0
 			if v, ok := st[card.UpsEnvOverTemperature]; ok {
-				to = float64(v.(int)) / 10
+				if valOver, ok := v.(int); ok {
+					to = float64(valOver) / 10
+				}
 			}
 			if v, ok := st[card.UpsEnvUnderTemperature]; ok {
-				tu = float64(v.(int)) / 10
+				if valUnder, ok := v.(int); ok {
+					tu = float64(valUnder) / 10
+				}
 			}
 			s = fmt.Sprintf("%.1f ℃  (%.1f/%.1f ℃ )", t, tu, to)
 		}
@@ -136,21 +150,27 @@ func getEnvTemperature(st map[string]any) (s string) {
 
 func getFw(st map[string]any) (f string) {
 	if v, ok := st[card.UpsSmartIdentFirmwareRevision]; ok {
-		f = strings.TrimSpace(v.(string))
+		if s, ok := v.(string); ok {
+			f = strings.TrimSpace(s)
+		}
 	}
 	return
 }
 
 func getFwCard(st map[string]any) (f string) {
 	if v, ok := st[card.UpsSmartIdentAgentFirmwareRevision]; ok {
-		f = strings.TrimSpace(v.(string))
+		if s, ok := v.(string); ok {
+			f = strings.TrimSpace(s)
+		}
 	}
 	return
 }
 
 func getLastDiagnosticsDate(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartTestLastDiagnosticsDate]; ok {
-		l = v.(string)
+		if s, ok := v.(string); ok {
+			l = s
+		}
 	}
 	return
 }
@@ -182,7 +202,9 @@ func getLineFailCause(st map[string]any) (s string) {
 func getLineFreq(st map[string]any) string {
 	f := 0.0
 	if v, ok := st[card.UpsSmartInputFrequency]; ok {
-		f = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			f = float64(val) / 10
+		}
 	}
 	return fmt.Sprintf("%.1f Гц", f)
 }
@@ -192,21 +214,29 @@ func getLineVoltage(st map[string]any) string {
 	vmin := 0.0
 	vmax := 0.0
 	if v, ok := st[card.UpsSmartInputLineVoltage]; ok {
-		vcur = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			vcur = float64(val) / 10
+		}
 	}
 	if v, ok := st[card.UpsSmartInputMaxLineVoltage]; ok {
-		vmax = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			vmax = float64(val) / 10
+		}
 	}
 	if v, ok := st[card.UpsSmartInputMinLineVoltage]; ok {
-		vmin = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			vmin = float64(val) / 10
+		}
 	}
 	return fmt.Sprintf("%.1f В (%.1f/%.1f В)", vcur, vmin, vmax)
 }
 
 func getLowBatteryRunTime(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigLowBatteryRunTime]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
@@ -220,14 +250,18 @@ func getMinReturnCapacity(st map[string]any) (l string) {
 
 func getOutputCurrent(st map[string]any) (a float64) {
 	if v, ok := st[card.UpsOutputCurrent]; ok {
-		a = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			a = float64(val) / 10
+		}
 	}
 	return
 }
 
 func getOutputFrequency(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartOutputFrequency]; ok {
-		l = fmt.Sprintf("%.1f Гц", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%.1f Гц", float64(val)/10)
+		}
 	}
 	return
 }
@@ -272,23 +306,29 @@ func getOutputVoltage(st map[string]any) string {
 
 func getOutputVoltageVolt(st map[string]any) (vo float64) {
 	if v, ok := st[card.UpsSmartOutputVoltage]; ok {
-		vo = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			vo = float64(val) / 10
+		}
 	}
 	return
 }
 
 func getReturnDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigReturnDelay]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
 
 func getRunTimeRemaining(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartBatteryRunTimeRemaining]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
@@ -311,8 +351,10 @@ func getSensitivity(st map[string]any) (s string) {
 
 func getShutoffDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigShutoffDelay]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
@@ -321,10 +363,14 @@ func getTransferVoltage(st map[string]any) (tv string) {
 	var l float64
 	var h float64
 	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
-		l = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			l = float64(val) / 10
+		}
 	}
 	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
-		h = float64(v.(int)) / 10
+		if val, ok := v.(int); ok {
+			h = float64(val) / 10
+		}
 	}
 
 	if l != 0.0 || h != 0.0 {
@@ -338,7 +384,9 @@ func getUpsModel(st map[string]any, model string) (m string) {
 	if len(model) > 0 {
 		m = model
 	} else if v, ok := st[card.UpsBaseIdentModel]; ok {
-		m = strings.TrimSpace(v.(string))
+		if s, ok := v.(string); ok {
+			m = strings.TrimSpace(s)
+		}
 	}
 	return
 }
@@ -347,10 +395,14 @@ func getUpsName(st map[string]any, upsname string) (n string) {
 	if len(upsname) > 0 {
 		n = upsname
 	} else if v, ok := st[card.UpsBaseIdentUpsName]; ok {
-		n = strings.TrimSpace(v.(string))
+		if s, ok := v.(string); ok {
+			n = strings.TrimSpace(s)
+		}
 		if len(n) == 0 {
 			if v, ok := st[card.SysDescr]; ok {
-				n = strings.TrimSpace(v.(string))
+				if s, ok := v.(string); ok {
+					n = strings.TrimSpace(s)
+				}
 			}
 		}
 	}

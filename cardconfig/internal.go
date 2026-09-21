@@ -23,52 +23,66 @@ func getAlarm(st map[string]any) (s string) {
 
 func getAlarmTimer(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigAlarmTimer]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
 
 func getHighTransferVolt(st map[string]any) (h string) {
 	if v, ok := st[card.UpsSmartConfigHighTransferVolt]; ok {
-		h = fmt.Sprintf("%.1f В", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			h = fmt.Sprintf("%.1f В", float64(val)/10)
+		}
 	}
 	return
 }
 
 func getLowTransferVolt(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigLowTransferVolt]; ok {
-		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%.1f В", float64(val)/10)
+		}
 	}
 	return
 }
 
 func getLowBatteryRunTime(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigLowBatteryRunTime]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
 
 func getMinReturnCapacity(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigMinReturnCapacity]; ok {
-		l = fmt.Sprintf("%d%%", v)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%d%%", val)
+		}
 	}
 	return
 }
 
 func getRatedOutputVoltage(st map[string]any) (l string) {
 	if v, ok := st[card.UpsSmartConfigRatedOutputVoltage]; ok {
-		l = fmt.Sprintf("%.1f В", float64(v.(int))/10)
+		if val, ok := v.(int); ok {
+			l = fmt.Sprintf("%.1f В", float64(val)/10)
+		}
 	}
 	return
 }
 
 func getReturnDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigReturnDelay]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
@@ -91,16 +105,20 @@ func getSensitivity(st map[string]any) (s string) {
 
 func getShutoffDelay(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigShutoffDelay]; ok {
-		d := time.Duration(v.(int)) * time.Second
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Second
+			t = d.String()
+		}
 	}
 	return
 }
 
 func getUpsSleepTime(st map[string]any) (t string) {
 	if v, ok := st[card.UpsSmartConfigUpsSleepTime]; ok {
-		d := time.Duration(v.(int)) * time.Minute
-		t = d.String()
+		if val, ok := v.(int); ok {
+			d := time.Duration(val) * time.Minute
+			t = d.String()
+		}
 	}
 	return
 }
