@@ -39,7 +39,9 @@ func getOids(addr, community string, oids []string) (map[string]any, error) {
 		case g.OctetString:
 			st[v.Name] = string(v.Value.([]byte))
 		case g.Integer, g.Counter32, g.Gauge32, g.TimeTicks, g.Counter64:
-			st[v.Name] = v.Value.(int)
+			if z := g.ToBigInt(v.Value); z != nil {
+				st[v.Name] = int(z.Int64())
+			}
 		}
 	}
 
