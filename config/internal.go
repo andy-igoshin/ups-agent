@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -37,14 +38,24 @@ func poweroffCmd(c string) (string, error) {
 	if len(cmd) == 0 {
 		return "", errors.New("config: poweroffcmd() cannot be empty")
 	}
-	_, err := os.Stat(cmd)
-	if err == nil {
-		return cmd, nil
+
+	fields := strings.Fields(cmd)
+	name := fields[0]
+
+	// Требуем абсолютный путь, чтобы исключить подмену
+	// одноимённого исполняемого файла через $PATH.
+	if !filepath.IsAbs(name) {
+		return "", fmt.Errorf("config: poweroffcmd(%s) must be an absolute path", name)
 	}
-	if errors.Is(err, os.ErrNotExist) {
-		return "", fmt.Errorf("config: poweroffcmd(%s) file not exists", cmd)
+
+	if _, err := os.Stat(name); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return "", fmt.Errorf("config: poweroffcmd(%s) file not exists", name)
+		}
+		return "", fmt.Errorf("config: poweroffcmd(%s) error: %w", name, err)
 	}
-	return "", fmt.Errorf("config: poweroffcmd(%s) error: %w", cmd, err)
+
+	return strings.Join(fields, " "), nil
 }
 
 func validate(c *Config) error {

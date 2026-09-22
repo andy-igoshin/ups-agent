@@ -22,7 +22,7 @@ func TestPowerOff_OnceAndCallbacks(t *testing.T) {
 	conf.Logger.Level = "debug"
 	conf.PowerCtl.Poweroff = true
 	conf.PowerCtl.UpsPoweroff = true
-	conf.PowerCtl.PoweroffCmd = "true" // harmless command
+	conf.PowerCtl.PoweroffCmd = "/bin/true" // harmless command
 	conf.Snmp.Addr = "127.0.0.1"
 	conf.Snmp.Community = "public"
 
@@ -74,7 +74,7 @@ func TestPowerOff_NoUps(t *testing.T) {
 	conf.Logger.Level = "debug"
 	conf.PowerCtl.Poweroff = true
 	conf.PowerCtl.UpsPoweroff = false
-	conf.PowerCtl.PoweroffCmd = "true"
+	conf.PowerCtl.PoweroffCmd = "/bin/true"
 
 	logger, _ := log.New(conf)
 	defer logger.Close()
@@ -137,7 +137,7 @@ func TestPowerOff_UpsPoweroffError(t *testing.T) {
 	conf.Logger.Level = "debug"
 	conf.PowerCtl.Poweroff = true
 	conf.PowerCtl.UpsPoweroff = true
-	conf.PowerCtl.PoweroffCmd = "true"
+	conf.PowerCtl.PoweroffCmd = "/bin/true"
 
 	logger, _ := log.New(conf)
 	defer logger.Close()

@@ -5,6 +5,7 @@
 package poweroff
 
 import (
+	"os/exec"
 	"syscall"
 )
 
@@ -22,7 +23,7 @@ func (p *PowerOff) hostpoweroff(msg string) {
 		return
 	}
 
-	err = p.cmd.Run()
+	err = exec.Command(p.cmdName, p.cmdArgs...).Run()
 	if err != nil {
 		p.logger.Error("Poweroff Run(): %s", err)
 	}

@@ -3,7 +3,7 @@
 package poweroff
 
 import (
-	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
@@ -14,7 +14,8 @@ import (
 type PowerOff struct {
 	once        sync.Once
 	logger      *log.Logger
-	cmd         *exec.Cmd
+	cmdName     string
+	cmdArgs     []string
 	host        bool // выполнять ли выключение хоста
 	ups         bool // выполнять ли выключение ИБП
 	upspoweroff func(string, string) error
@@ -25,7 +26,15 @@ type PowerOff struct {
 func New(conf *config.Config, logger *log.Logger, upspoweroff func(string, string) error) *PowerOff {
 	p := PowerOff{}
 	p.logger = logger
-	p.cmd = exec.Command(conf.PowerCtl.PoweroffCmd)
+
+	fields := strings.Fields(conf.PowerCtl.PoweroffCmd)
+	if len(fields) > 0 {
+		p.cmdName = fields[0]
+	}
+	if len(fields) > 1 {
+		p.cmdArgs = fields[1:]
+	}
+
 	p.host = conf.PowerCtl.Poweroff
 	p.ups = conf.PowerCtl.UpsPoweroff
 	p.upspoweroff = upspoweroff
