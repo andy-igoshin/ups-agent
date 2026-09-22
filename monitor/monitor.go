@@ -24,13 +24,19 @@ func Run(conf *config.Config, logger *log.Logger, trapc chan string) {
 	}
 	defer mon.Close()
 
+	ticker := time.NewTicker(conf.Snmp.PollTime)
+	defer ticker.Stop()
+
 	for {
 		select {
 		case trap := <-trapc:
 			if card.TrapClaimPoweroff(trap) {
 				p.Poweroff(fmt.Sprintf("Initiated system shutdown process, trap(%s)", trap))
 			}
-		case <-time.After(conf.Snmp.PollTime):
+			// Трап сознательно инициирует внеочередной опрос,
+			// чтобы обновить счётчики ИБП перед решением о выключении.
+			ticker.Reset(conf.Snmp.PollTime)
+		case <-ticker.C:
 			// next polling
 		}
 
