@@ -65,7 +65,7 @@ func getTrapInfo(packet *g.SnmpPacket, logger *log.Logger) (oid, desc string) {
 					val = fmt.Sprintf("%d", (*z).Int64())
 				}
 			}
-			logger.Debug("- oid[%d]: %s (%s) = %v \n", i, v.Name, v.Type, val)
+			logger.Debug("- oid[%d]: %s (%s) = %v", i, v.Name, v.Type, val)
 		}
 	}
 
