@@ -1,3 +1,5 @@
+[![English](https://img.shields.io/badge/lang-en-blue.svg)](#) [![Russian](https://img.shields.io/badge/lang-ru-lightgrey.svg)](README.ru.md)
+
 # ups-agent
 
 Monitors an uninterruptible power supply (UPS) via SNMP and automatically shuts

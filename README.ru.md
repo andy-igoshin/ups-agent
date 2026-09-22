@@ -1,3 +1,5 @@
+[![English](https://img.shields.io/badge/lang-en-lightgrey.svg)](README.md) [![Russian](https://img.shields.io/badge/lang-ru-red.svg)](#)
+
 # ups-agent
 
 Мониторинг источника бесперебойного питания (ИБП) по протоколу SNMP и автоматическое
