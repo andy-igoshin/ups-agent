@@ -145,7 +145,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigLowBatteryRunTime] = int(c.LowBatteryRunTime / time.Second)
 	case -1:
 	default:
-		fmt.Println("cardconfig: LowBatteryRunTime:", c.LowBatteryRunTime)
+		fmt.Println("cardconfig: invalid LowBatteryRunTime:", c.LowBatteryRunTime)
 		return
 	}
 
