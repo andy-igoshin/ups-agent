@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 
 	"git.vsu.ru/ai/ups-agent/config"
@@ -53,7 +52,7 @@ func (l *Logger) Close() {
 }
 
 func (l *Logger) Reopen() {
-	newFile, err := os.OpenFile(path.Join(l.logdir, l.filename), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	newFile, err := os.OpenFile(filepath.Join(l.logdir, l.filename), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Printf("Reopen log error: %s", err)
 		return
