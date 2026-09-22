@@ -55,6 +55,7 @@ func (m *Monitor) Poll() (*MonitorData, error) {
 	}
 
 	md := MonitorData{}
+	var val int
 
 	for _, v := range res.Variables {
 
@@ -62,9 +63,10 @@ func (m *Monitor) Poll() (*MonitorData, error) {
 			return nil, fmt.Errorf("OID %s is nil", v.Name)
 		}
 
-		val, ok := v.Value.(int)
-		if !ok {
-			return nil, fmt.Errorf("OID %s: expected int, got %T", v.Name, v.Value)
+		if z := g.ToBigInt(v.Value); z != nil {
+			val = int(z.Int64())
+		} else {
+			return nil, fmt.Errorf("OID %s: cannot convert %T to int", v.Name, v.Value)
 		}
 
 		switch v.Name {
