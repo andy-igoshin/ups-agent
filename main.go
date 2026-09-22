@@ -37,7 +37,11 @@ func main() {
 		return
 	}
 
-	logger := log.New(conf)
+	logger, err := log.New(conf)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 	defer logger.Close()
 
 	trapc := make(chan string, 16)

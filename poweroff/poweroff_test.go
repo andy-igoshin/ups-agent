@@ -26,7 +26,7 @@ func TestPowerOff_OnceAndCallbacks(t *testing.T) {
 	conf.Snmp.Addr = "127.0.0.1"
 	conf.Snmp.Community = "public"
 
-	logger := log.New(conf)
+	logger, _ := log.New(conf)
 	defer logger.Close()
 
 	upsPoweroffCalled := 0
@@ -76,7 +76,7 @@ func TestPowerOff_NoUps(t *testing.T) {
 	conf.PowerCtl.UpsPoweroff = false
 	conf.PowerCtl.PoweroffCmd = "true"
 
-	logger := log.New(conf)
+	logger, _ := log.New(conf)
 	defer logger.Close()
 
 	upsPoweroffCalled := 0
@@ -107,7 +107,7 @@ func TestPowerOff_NoHost(t *testing.T) {
 	conf.PowerCtl.Poweroff = false
 	conf.PowerCtl.UpsPoweroff = true
 
-	logger := log.New(conf)
+	logger, _ := log.New(conf)
 	defer logger.Close()
 
 	upsPoweroffCalled := 0
@@ -139,7 +139,7 @@ func TestPowerOff_UpsPoweroffError(t *testing.T) {
 	conf.PowerCtl.UpsPoweroff = true
 	conf.PowerCtl.PoweroffCmd = "true"
 
-	logger := log.New(conf)
+	logger, _ := log.New(conf)
 	defer logger.Close()
 
 	mockUpsPoweroff := func(addr, community string) error {

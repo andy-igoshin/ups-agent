@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -27,7 +28,7 @@ type Logger struct {
 	filename string
 }
 
-func New(conf *config.Config) *Logger {
+func New(conf *config.Config) (*Logger, error) {
 
 	var err error
 
@@ -37,13 +38,13 @@ func New(conf *config.Config) *Logger {
 
 	l.file, err = os.OpenFile(path.Join(l.logdir, l.filename), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		log.Fatal("Open log error: ", err)
+		return nil, fmt.Errorf("Open log error: %w", err)
 	}
 
 	l.logger = log.New(l.file, "", log.LstdFlags|log.Lmicroseconds|log.Lmsgprefix)
 	l.level = l.getLevel(conf.Logger.Level)
 
-	return &l
+	return &l, nil
 }
 
 func (l *Logger) Close() {

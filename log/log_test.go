@@ -74,7 +74,7 @@ func TestLogger(t *testing.T) {
 	conf.Logger.FileName = "test.log"
 	conf.Logger.Level = "debug"
 
-	logger := New(conf)
+	logger, _ := New(conf)
 	if logger == nil {
 		t.Fatal("New() returned nil")
 	}
@@ -126,7 +126,7 @@ func TestLoggerReopen(t *testing.T) {
 	conf.Logger.FileName = "reopen.log"
 	conf.Logger.Level = "info"
 
-	logger := New(conf)
+	logger, _ := New(conf)
 	if logger == nil {
 		t.Fatal("New() returned nil")
 	}
@@ -177,7 +177,7 @@ func TestLoggerLevelFiltering(t *testing.T) {
 	conf.Logger.FileName = "filter.log"
 	conf.Logger.Level = "warn"
 
-	logger := New(conf)
+	logger, _ := New(conf)
 	if logger == nil {
 		t.Fatal("New() returned nil")
 	}

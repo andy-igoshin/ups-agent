@@ -55,7 +55,7 @@ func TestTrapClaimPoweroff(t *testing.T) {
 	}
 }
 
-func newTestLogger(t *testing.T) *log.Logger {
+func newTestLogger(t *testing.T) (*log.Logger, error) {
 	t.Helper()
 	tmpDir, err := os.MkdirTemp("", "ups-agent-card-test")
 	if err != nil {
@@ -72,7 +72,7 @@ func newTestLogger(t *testing.T) *log.Logger {
 }
 
 func TestGetTrapInfo_OctetString(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	packet := &g.SnmpPacket{
@@ -91,7 +91,7 @@ func TestGetTrapInfo_OctetString(t *testing.T) {
 }
 
 func TestGetTrapInfo_ObjectIdentifier(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	packet := &g.SnmpPacket{
@@ -111,7 +111,7 @@ func TestGetTrapInfo_ObjectIdentifier(t *testing.T) {
 }
 
 func TestGetTrapInfo_Empty(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	packet := &g.SnmpPacket{}
@@ -125,7 +125,7 @@ func TestGetTrapInfo_Empty(t *testing.T) {
 }
 
 func TestTrapHandler_ACLMismatch(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	trapw := make(chan string, 1)
@@ -148,7 +148,7 @@ func TestTrapHandler_ACLMismatch(t *testing.T) {
 }
 
 func TestTrapHandler_Send(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	trapw := make(chan string, 1)
@@ -174,7 +174,7 @@ func TestTrapHandler_Send(t *testing.T) {
 }
 
 func TestTrapHandler_NotSend(t *testing.T) {
-	logger := newTestLogger(t)
+	logger, _ := newTestLogger(t)
 	defer logger.Close()
 
 	trapw := make(chan string, 1)
