@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"git.vsu.ru/ai/ups-agent/cardconfig"
 	"git.vsu.ru/ai/ups-agent/config"
 	"git.vsu.ru/ai/ups-agent/log"
@@ -10,7 +13,20 @@ import (
 
 func main() {
 
-	conf := config.New()
+	conf, err := config.New()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	if conf.IsDump() {
+		_ = config.Dump(conf)
+		return
+	}
+	if conf.IsTest() {
+		fmt.Println("config: Syntax OK")
+		return
+	}
 
 	if conf.IsStatus() {
 		status.Print(conf)

@@ -10,47 +10,41 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func cliCardConfigType(o string) (t int) {
+func cliCardConfigType(o string) (int, error) {
 	switch o {
 	case "get":
-		t = CliCardConfigGet
+		return CliCardConfigGet, nil
 	case "set":
-		t = CliCardConfigSet
+		return CliCardConfigSet, nil
 	case "default":
-		t = CliCardConfigDefault
+		return CliCardConfigDefault, nil
 	default:
-		fmt.Println("cardconfig: unknown operation:", o)
-		os.Exit(1)
+		return CliUnknown, fmt.Errorf("cardconfig: unknown operation: %s", o)
 	}
-	return
 }
 
-func dumpConfig(config *Config) {
+func Dump(config *Config) error {
 	yml, err := yaml.Marshal(config)
 	if err != nil {
-		fmt.Println("config:", err)
-	} else {
-		fmt.Println(string(yml))
+		return fmt.Errorf("config: %w", err)
 	}
+	fmt.Println(string(yml))
+	return nil
 }
 
-func poweroffCmd(c string) string {
+func poweroffCmd(c string) (string, error) {
 	cmd := strings.TrimSpace(c)
 	if len(cmd) == 0 {
-		fmt.Println("config: poweroffcmd() cannot be empty")
-		os.Exit(1)
+		return "", errors.New("config: poweroffcmd() cannot be empty")
 	}
 	_, err := os.Stat(cmd)
 	if err == nil {
-		return cmd
+		return cmd, nil
 	}
 	if errors.Is(err, os.ErrNotExist) {
-		fmt.Printf("config: poweroffcmd(%s) file not exists\n", cmd)
-	} else {
-		fmt.Printf("config: poweroffcmd(%s) error: %v\n", cmd, err)
+		return "", fmt.Errorf("config: poweroffcmd(%s) file not exists", cmd)
 	}
-	os.Exit(1)
-	return ""
+	return "", fmt.Errorf("config: poweroffcmd(%s) error: %w", cmd, err)
 }
 
 func validate(c *Config) error {

@@ -242,17 +242,22 @@ func TestValidate(t *testing.T) {
 
 func TestCliCardConfigType(t *testing.T) {
 	tests := []struct {
-		input string
-		want  int
+		input   string
+		want    int
+		wantErr bool
 	}{
-		{"get", CliCardConfigGet},
-		{"set", CliCardConfigSet},
-		{"default", CliCardConfigDefault},
+		{"get", CliCardConfigGet, false},
+		{"set", CliCardConfigSet, false},
+		{"default", CliCardConfigDefault, false},
+		{"unknown", CliUnknown, true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			got := cliCardConfigType(tt.input)
+			got, err := cliCardConfigType(tt.input)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("cliCardConfigType(%q) error = %v, wantErr %v", tt.input, err, tt.wantErr)
+			}
 			if got != tt.want {
 				t.Errorf("cliCardConfigType(%q) = %v, want %v", tt.input, got, tt.want)
 			}

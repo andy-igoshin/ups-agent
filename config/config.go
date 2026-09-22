@@ -61,9 +61,11 @@ type Config struct {
 	}
 
 	cliType int
+	cliDump bool
+	cliTest bool
 }
 
-func New() *Config {
+func New() (*Config, error) {
 
 	config := new(Config)
 
@@ -82,47 +84,44 @@ func New() *Config {
 	flag.BoolVar(&status, "status", false, "Print UPS status")
 	flag.Parse()
 
-	err := configor.Load(config, configfile)
-	if err != nil {
-		fmt.Println("config:", err)
-		os.Exit(1)
+	if err := configor.Load(config, configfile); err != nil {
+		return nil, fmt.Errorf("config: %w", err)
 	}
 
 	if err := validate(config); err != nil {
-		fmt.Println("config:", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("config: %w", err)
 	}
 
 	if len(config.Hostname) == 0 {
 		hostname, err := os.Hostname()
 		if err != nil {
-			fmt.Println("config:", err)
-			os.Exit(1)
+			return nil, fmt.Errorf("config: %w", err)
 		}
 		config.Hostname = hostname
 	}
 
-	config.PowerCtl.PoweroffCmd = poweroffCmd(config.PowerCtl.PoweroffCmd)
+	if cmd, err := poweroffCmd(config.PowerCtl.PoweroffCmd); err != nil {
+		return nil, err
+	} else {
+		config.PowerCtl.PoweroffCmd = cmd
+	}
 
 	if status {
 		config.cliType = CliStatus
 	}
 
 	if len(cardconfig) > 0 {
-		config.cliType = cliCardConfigType(cardconfig)
+		t, err := cliCardConfigType(cardconfig)
+		if err != nil {
+			return nil, err
+		}
+		config.cliType = t
 	}
 
-	if configdump {
-		dumpConfig(config)
-		os.Exit(0)
-	}
+	config.cliDump = configdump
+	config.cliTest = configtest
 
-	if configtest {
-		fmt.Println("config: Syntax OK")
-		os.Exit(0)
-	}
-
-	return config
+	return config, nil
 }
 
 func (c *Config) CardOp() (op int) {
@@ -146,4 +145,12 @@ func (c *Config) IsStatus() (t bool) {
 		t = true
 	}
 	return
+}
+
+func (c *Config) IsDump() bool {
+	return c.cliDump
+}
+
+func (c *Config) IsTest() bool {
+	return c.cliTest
 }
