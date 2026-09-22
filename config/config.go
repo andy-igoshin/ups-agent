@@ -69,13 +69,16 @@ func New() (*Config, error) {
 
 	config := new(Config)
 
-	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-
+	var cardconfig string
 	var configfile string
 	var configdump bool
 	var configtest bool
+	var dir string
 	var status bool
-	var cardconfig string
+
+	if execPath, err := os.Executable(); err == nil {
+		dir = filepath.Dir(execPath)
+	}
 
 	flag.StringVar(&cardconfig, "cardconfig", "", "Perform `get|set|default` UPS configuration")
 	flag.StringVar(&configfile, "config", filepath.Join(dir, "ups-agent.yml"), "Set configuration file `path`")
