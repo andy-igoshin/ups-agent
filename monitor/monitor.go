@@ -12,7 +12,9 @@ import (
 
 func Run(conf *config.Config, logger *log.Logger, trapc chan string) {
 
-	go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc)
+	if conf.Snmp.TrapListener != "" {
+		go card.TrapReceiver(conf.Snmp.TrapListener, conf.Snmp.Addr, conf.Snmp.TrapCommunity, logger, trapc)
+	}
 
 	p := poweroff.New(conf, logger, card.Poweroff)
 
