@@ -29,11 +29,17 @@ func main() {
 	}
 
 	if conf.IsStatus() {
-		status.Print(conf)
+		if err := status.Print(conf); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		return
 	}
 	if conf.IsCardConfig() {
-		cardconfig.Run(conf)
+		if err := cardconfig.Run(conf); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		return
 	}
 

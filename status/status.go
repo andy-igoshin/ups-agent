@@ -7,12 +7,11 @@ import (
 	"git.vsu.ru/ai/ups-agent/config"
 )
 
-func Print(conf *config.Config) {
+func Print(conf *config.Config) error {
 
 	st, err := card.Status(conf.Snmp.Addr, conf.Snmp.Community)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return fmt.Errorf("status: %w", err)
 	}
 
 	form := "%-22s: %s\n"
@@ -63,4 +62,6 @@ func Print(conf *config.Config) {
 
 	fmt.Printf(form, "Firmware UPS", getFw(st))
 	fmt.Printf(form, "Firmware SNMP Card", getFwCard(st))
+
+	return nil
 }

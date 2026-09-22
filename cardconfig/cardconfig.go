@@ -8,26 +8,26 @@ import (
 	"git.vsu.ru/ai/ups-agent/config"
 )
 
-func Run(conf *config.Config) {
+func Run(conf *config.Config) error {
 
 	switch conf.CardOp() {
 	case config.CliCardConfigGet:
-		printConfig(conf)
+		return printConfig(conf)
 
 	case config.CliCardConfigSet:
-		writeConfig(conf)
+		return writeConfig(conf)
 
 	case config.CliCardConfigDefault:
-		setDefaultConfig(conf)
+		return setDefaultConfig(conf)
 	}
+	return nil
 }
 
-func printConfig(conf *config.Config) {
+func printConfig(conf *config.Config) error {
 
 	st, err := card.GetConfig(conf.Snmp.Addr, conf.Snmp.Community)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return fmt.Errorf("cardconfig: %w", err)
 	}
 
 	form := "%-19s: %s\n"
@@ -43,9 +43,11 @@ func printConfig(conf *config.Config) {
 	fmt.Printf(form, "ReturnDelay", getReturnDelay(st))
 	fmt.Printf(form, "ShutoffDelay", getShutoffDelay(st))
 	fmt.Printf(form, "UpsSleepTime", getUpsSleepTime(st))
+
+	return nil
 }
 
-func setDefaultConfig(conf *config.Config) {
+func setDefaultConfig(conf *config.Config) error {
 
 	data := make(map[string]int, 8)
 
@@ -60,11 +62,12 @@ func setDefaultConfig(conf *config.Config) {
 
 	err := card.SetOids(conf.Snmp.Addr, conf.Snmp.Community, data)
 	if err != nil {
-		fmt.Println(err)
+		return fmt.Errorf("cardconfig: %w", err)
 	}
+	return nil
 }
 
-func writeConfig(conf *config.Config) {
+func writeConfig(conf *config.Config) error {
 
 	c := conf.CardConfig
 	data := make(map[string]int, 11)
@@ -75,8 +78,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigRatedOutputVoltage] = c.RatedOutputVoltage * 10
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid RatedOutputVoltage:", c.RatedOutputVoltage)
-		return
+		return fmt.Errorf("cardconfig: invalid RatedOutputVoltage: %d", c.RatedOutputVoltage)
 	}
 
 	// UpsSmartConfigHighTransferVolt
@@ -85,8 +87,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigHighTransferVolt] = c.HighTransferVolt * 10
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid HighTransferVolt:", c.HighTransferVolt)
-		return
+		return fmt.Errorf("cardconfig: invalid HighTransferVolt: %d", c.HighTransferVolt)
 	}
 
 	// UpsSmartConfigLowTransferVolt
@@ -95,8 +96,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigLowTransferVolt] = c.LowTransferVolt * 10
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid LowTransferVolt:", c.LowTransferVolt)
-		return
+		return fmt.Errorf("cardconfig: invalid LowTransferVolt: %d", c.LowTransferVolt)
 	}
 
 	// UpsSmartConfigAlarm
@@ -105,8 +105,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigAlarm] = c.Alarm
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid Alarm:", c.Alarm)
-		return
+		return fmt.Errorf("cardconfig: invalid Alarm: %d", c.Alarm)
 	}
 
 	// UpsSmartConfigAlarmTimer
@@ -115,8 +114,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigAlarmTimer] = int(c.AlarmTimer / time.Second)
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid AlarmTimer:", c.AlarmTimer)
-		return
+		return fmt.Errorf("cardconfig: invalid AlarmTimer: %s", c.AlarmTimer)
 	}
 
 	// UpsSmartConfigMinReturnCapacity
@@ -125,8 +123,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigMinReturnCapacity] = c.MinReturnCapacity
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid MinReturnCapacity:", c.MinReturnCapacity)
-		return
+		return fmt.Errorf("cardconfig: invalid MinReturnCapacity: %d", c.MinReturnCapacity)
 	}
 
 	// UpsSmartConfigSensitivity
@@ -135,8 +132,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigSensitivity] = c.Sensitivity
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid Sensitivity:", c.Sensitivity)
-		return
+		return fmt.Errorf("cardconfig: invalid Sensitivity: %d", c.Sensitivity)
 	}
 
 	// UpsSmartConfigLowBatteryRunTime
@@ -145,8 +141,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigLowBatteryRunTime] = int(c.LowBatteryRunTime / time.Second)
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid LowBatteryRunTime:", c.LowBatteryRunTime)
-		return
+		return fmt.Errorf("cardconfig: invalid LowBatteryRunTime: %s", c.LowBatteryRunTime)
 	}
 
 	// UpsSmartConfigReturnDelay
@@ -155,8 +150,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigReturnDelay] = int(c.ReturnDelay / time.Second)
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid ReturnDelay:", c.ReturnDelay)
-		return
+		return fmt.Errorf("cardconfig: invalid ReturnDelay: %s", c.ReturnDelay)
 	}
 
 	// UpsSmartConfigShutoffDelay
@@ -165,8 +159,7 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigShutoffDelay] = int(c.ShutoffDelay / time.Second)
 	case -1:
 	default:
-		fmt.Println("cardconfig: invalid ShutoffDelay:", c.ShutoffDelay)
-		return
+		return fmt.Errorf("cardconfig: invalid ShutoffDelay: %s", c.ShutoffDelay)
 	}
 
 	// UpsSmartConfigUpsSleepTime
@@ -176,8 +169,8 @@ func writeConfig(conf *config.Config) {
 		data[card.UpsSmartConfigUpsSleepTime] = int(c.UpsSleepTime / time.Minute)
 	}
 
-	err := card.SetOids(conf.Snmp.Addr, conf.Snmp.Community, data)
-	if err != nil {
-		fmt.Println(err)
+	if err := card.SetOids(conf.Snmp.Addr, conf.Snmp.Community, data); err != nil {
+		return fmt.Errorf("cardconfig: %w", err)
 	}
+	return nil
 }
