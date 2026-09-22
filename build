@@ -15,7 +15,7 @@ elif [ "$1" == "get" ]; then
 elif [ "$1" == "init" ]; then
     go mod init $2
 elif [ "$1" == "test" ]; then
-    go test
+    go test $2 $3 $4 $5
 elif [ "$1" == "tidy" ]; then
     go mod tidy
 elif [ "$1" == "update" ]; then
