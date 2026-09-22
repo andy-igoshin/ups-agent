@@ -140,15 +140,15 @@ func (c *Config) IsCardConfig() (t bool) {
 	return
 }
 
+func (c *Config) IsDump() bool {
+	return c.cliDump
+}
+
 func (c *Config) IsStatus() (t bool) {
 	if c.cliType == CliStatus {
 		t = true
 	}
 	return
-}
-
-func (c *Config) IsDump() bool {
-	return c.cliDump
 }
 
 func (c *Config) IsTest() bool {
