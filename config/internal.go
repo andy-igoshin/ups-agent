@@ -33,8 +33,12 @@ func Dump(config *Config) error {
 	return nil
 }
 
-func poweroffCmd(c string) (string, error) {
-	cmd := strings.TrimSpace(c)
+func poweroffCmd(c *Config) (string, error) {
+	if c.PowerCtl.Poweroff == false {
+		return "", nil
+	}
+
+	cmd := strings.TrimSpace(c.PowerCtl.PoweroffCmd)
 	if len(cmd) == 0 {
 		return "", errors.New("config: poweroffcmd() cannot be empty")
 	}

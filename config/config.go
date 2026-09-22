@@ -100,7 +100,7 @@ func New() (*Config, error) {
 		config.Hostname = hostname
 	}
 
-	if cmd, err := poweroffCmd(config.PowerCtl.PoweroffCmd); err != nil {
+	if cmd, err := poweroffCmd(config); err != nil {
 		return nil, err
 	} else {
 		config.PowerCtl.PoweroffCmd = cmd
