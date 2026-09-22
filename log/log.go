@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 
 	"git.vsu.ru/ai/ups-agent/config"
 )
@@ -36,7 +37,7 @@ func New(conf *config.Config) (*Logger, error) {
 	l.logdir = conf.Logger.LogDir
 	l.filename = conf.Logger.FileName
 
-	l.file, err = os.OpenFile(path.Join(l.logdir, l.filename), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	l.file, err = os.OpenFile(filepath.Join(l.logdir, l.filename), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		return nil, fmt.Errorf("Open log error: %w", err)
 	}
