@@ -34,7 +34,6 @@ The program:
 ## Requirements
 
 - Linux (uses `syscall.Sync` and `seteuid(0)` when shutting down the host);
-- Go 1.27.1 or newer;
 - A UPS with an SNMP card (for example, one supporting the `Upsmate.mib` MIB).
 
 ## Building
