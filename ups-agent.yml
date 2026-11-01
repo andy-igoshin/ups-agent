@@ -1,9 +1,9 @@
-# upsname: c2r1ups1
+# upsname: ups-name
 model: СИПБ6КД.9-11/БПС
 
 logger:
   level: "debug"
-  logdir: "./"
+  logdir: "logs"
   filename: "ups-agent.log"
 
 powerctl:
@@ -27,10 +27,10 @@ powerctl:
   # upspoweroff: false
 
 snmp:
-  addr: 172.30.2.20
+  addr: 2.3.4.5
   community: public
   polltime: 60s
-  traplistener: 62.76.169.33:162
+  traplistener: 1.2.3.4:162
 
 cardconfig:
   # Номинальное напряжение
